@@ -1,0 +1,11 @@
+Found issues and pitfalls
+
+_Missing #defines_
+
+When switching from arduino uno to avr-netino #defines are missing. This is due to missing features of Atmega32 or Atmega644 in compare to Atmega328 (Arduino UNO) or missig defines in the iom32.h or iom644.h files contributed with avr-lib.
+
+For example: the iom644.h file coming with arduino 1.0 does not contain the interrupt definitions as iom328.h.
+
+One fix: use the source file avr/iom644.h.
+
+
