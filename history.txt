@@ -12,6 +12,6 @@ So I did the addon board aside and concentrated first on the netio. There are va
 
 Then I ordered a pair of a simple 433MHz receiver/transmitter via ebay from hongkong. After some weeks I got the set. It was easy to connect the receiver to the netio, but I first did not find any receiver code that was able to decode my wireless sensors.
 
-I started to use protocol analysers, captured the receiver data using my PC's sound card. I opened one of the sensors and fortunately the sender was a separate modul with written connections. I attached the data signal header directly to my sound card and tried protocol analyser and code samples. But all this did not help to be able to decode the signal of the wireless sensors until I found fuzzylogic code repository at https://bitbucket.org/fuzzillogic/433mhzforarduino/overview. The main cause of this finding was the printing of Hideki onto the print boards inside the sensor.
+I started to use protocol analysers, captured the receiver data using my PC's sound card. I opened one of the sensors and fortunately the sender was a separate modul with written connections. I attached the data signal header directly to my sound card and tried protocol analyser and code samples. But all this did not help to be able to decode the signal of the wireless sensors until I found fuzzylogic code repository at https://bitbucket.org/fuzzillogic/433mhzforarduino/overview. The main cause of this finding was the printing of Hideki on the print boards inside the sensor.
 
 
