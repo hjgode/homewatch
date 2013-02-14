@@ -1,0 +1,9 @@
+AVR Netino is an extension to Arduino IDE 0.22/0.23 and 1.00 to enable the use of the Arduino IDE with the Pollin AVR NetIO board.
+
+[http://code.google.com/p/avr-netino/]
+
+When switching from Uno to Avr-Netino Atmega32 or Atmega644 there will be several compiler errors to be fixed.
+
+Atmega644: The EWEE definition has to be altered (see avr dir)
+
+
