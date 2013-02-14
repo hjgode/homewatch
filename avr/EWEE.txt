@@ -1,0 +1,22 @@
+[http://n0m1.com/2012/04/01/how-to-compiling-the-arduino-bootloader/]
+
+This EEWE issue (152) [http://code.google.com/p/arduino/issues/detail?id=152&q=eewe] has been around for a while and was originally reported in 2009.  Within the source file ATmegaBOOT_168.c, around line 584, we will comment out the old and add in the new:
+
+// ?kraz? -fixed EEWE bit definition missing in versions 1.6.7 and newer of the file /avr/eeprom.h
+// According to this issue reported in 2009: http://code.google.com/p/arduino/issues/detail?id=152&q=eewe
+#if defined(EEPE)
+                while(bit_is_set(EECR,EEPE));           //Wait for previous EEPROM writes to complete
+#else
+                while(bit_is_set(EECR,EEWE));           //Wait for previous EEPROM writes to complete
+#endif
+ 
+/*
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega1281__)
+                while(bit_is_set(EECR,EEPE));           //Wait for previous EEPROM writes to complete
+#else
+                while(bit_is_set(EECR,EEWE));           //Wait for previous EEPROM writes to complete
+#endif
+*/
+
+hjgode: the above EWEE fix is also needed wwhen using a 644 based board like the sanguino or AVR-NETINO (Pollin AVR NetIO within Arduino).
+ 
