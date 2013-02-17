@@ -1,0 +1,105 @@
+
+_Ports_
+
+__arduino__
+
+// ATmega328, cookbook RFM12B 3V3 connections
+// I used RFM12 (no B) without resistors
+#define RFM_IRQ     PD2   //PCINT18/INT0   //pin04  //7 what is 7? PB7?, but works
+//PCINT18 maps to INT0, PCMSK2/BIT2, see avr/iom328p.h
+
+#define SS_DDR      DDRB
+#define SS_PORT     PORTB
+#define SS_BIT      2       // for PORTB: 2 = d.10, 1 = d.9, 0 = d.8
+
+#define SPI_SS      PB2  //pin16  //10      // do not change, must point to h/w SPI pin
+#define SPI_MOSI    PB3  //pin17  //11
+#define SPI_MISO    PB4  //pin18  //12
+#define SPI_SCK     PB5  //pin19  //13
+
+__avrnetio__
+
+// ATmega644 
+#define RFM_IRQ     PD3     //pin 17, PCINT27/INT1, PD3 defined as 3 in iomxx4.h
+//PCINT27 maps to INT1, PCMSK3/BIT3, see avr/iomxx4.h
+
+#define SS_DDR      DDRD
+#define SS_PORT     PORTD
+#define SS_BIT      5       // for PORTB: 2 = d.10, 1 = d.9, 0 = d.8
+
+#define SPI_SS      PB4	    //5      // do not change, must point to h/w SPI pin
+#define SPI_MOSI    PB5     //6
+#define SPI_MISO    PB6     //7
+#define SPI_SCK     PB7     //8
+
+_PINCHG_IRQ_
+
+__arduino__
+
+void rf12_initialize( byte irq_on )
+...
+#if PINCHG_IRQ
+    detachInterrupt(0);
+    if ( irq_on != 0)
+    {
+    #if RFM_IRQ < 8
+            bitClear(DDRD, RFM_IRQ);      // input
+            bitSet(PORTD, RFM_IRQ);       // pull-up
+            bitSet(PCMSK2, RFM_IRQ);      // pin-change
+            bitSet(PCICR, PCIE2);         // enable
+    #elif RFM_IRQ < 14
+            bitClear(DDRB, RFM_IRQ - 8);  // input
+            bitSet(PORTB, RFM_IRQ - 8);   // pull-up
+            bitSet(PCMSK0, RFM_IRQ - 8);  // pin-change
+            bitSet(PCICR, PCIE0);         // enable
+    #else
+            bitClear(DDRC, RFM_IRQ - 14); // input
+            bitSet(PORTC, RFM_IRQ - 14);  // pull-up
+            bitSet(PCMSK1, RFM_IRQ - 14); // pin-change
+            bitSet(PCICR, PCIE1);         // enable
+    #endif
+    }
+#else    
+    if ( irq_on != 0) {
+        attachInterrupt(0, rf12_interrupt, LOW);
+	bitSet(EIMSK, INT0);	// enable interrupt from RFM12
+    } else
+        detachInterrupt(0);
+#endif 
+
+rf12_interrupt is intrrupt service routine
+
+before "static void rf12_recvStart" we have:
+
+#ifdef PINCHG_IRQ
+  #if RFM_IRQ < 8
+    ISR(PCINT2_vect) { if (!bitRead(PIND, RFM_IRQ)) rf12_interrupt(); }
+  #elif RFM_IRQ < 14
+    ISR(PCINT0_vect) { if (!bitRead(PINB, RFM_IRQ - 8)) rf12_interrupt(); }
+  #else
+    ISR(PCINT1_vect) { if (!bitRead(PINC, RFM_IRQ - 14)) rf12_interrupt(); }
+  #endif
+#endif
+
+__avrnetio__
+
+USING PINCHG_IRQ WILL NEED MANY CHANGES FOR PCMSK3 on AVRNETIO!
+
+# attachInterrupt is hard wired to INT0. But on avrnetio we have RFM12 on INT1! #
+
+FROM arduino:
+    if ( irq_on != 0) {
+        attachInterrupt(0, rf12_interrupt, LOW);
+	bitSet(EIMSK, INT0);	// enable interrupt from RFM12
+    } else
+        detachInterrupt(0);
+for avrnetio:
+    if ( irq_on != 0) {
+        attachInterrupt(1, rf12_interrupt, LOW);
+	bitSet(EIMSK, INT1);	// enable interrupt from RFM12
+    } else
+        detachInterrupt(1);
+
+better use a new #define for INTx
+
+
