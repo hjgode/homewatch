@@ -84,6 +84,14 @@ before "static void rf12_recvStart" we have:
 __avrnetio__
 
 USING PINCHG_IRQ WILL NEED MANY CHANGES FOR PCMSK3 on AVRNETIO!
+PINCHG interrupts are not the same as INT0/1/2 interrupts
+INT0/1/2 are pins that can be used to trigger an interrupt service directly. But with pinchange 
+interrupts you can watch a block of pins and the PCINTx interrupt is called. Any pin can be configured
+as source for a pinchange interrupt (PCIMSKx). In the PCINTx service routine you can check which pin was
+the source of the interrupt. Pin change interrupts are assigned to blocks of 8 bits which are assigned to
+portA/B/C/D. see also http://www.avrfreaks.net/index.php?name=PNphpBB2&file=viewtopic&t=39290
+
+see also http://web.cs.mun.ca/~rod/Winter2007/4723/notes/avr-intr/avr-intr.html
 
 # attachInterrupt is hard wired to INT0. But on avrnetio we have RFM12 on INT1! #
 
