@@ -93,6 +93,8 @@ portA/B/C/D. see also http://www.avrfreaks.net/index.php?name=PNphpBB2&file=view
 
 see also http://web.cs.mun.ca/~rod/Winter2007/4723/notes/avr-intr/avr-intr.html
 
+see also http://code.google.com/p/arduino-pinchangeint/source/browse/trunk/PinChangeInt.cpp
+
 # attachInterrupt is hard wired to INT0. But on avrnetio we have RFM12 on INT1! #
 
 FROM arduino:
