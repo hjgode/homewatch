@@ -90,7 +90,7 @@ static void exectimeprt( PGM_P text )
 // (derived from jeelabs RF12.zip 2011-08-22)
 
 // ATmega328, etc.
-#define RFM_IRQ     7
+#define RFM_IRQ     2
 #define SS_DDR      DDRB
 #define SS_PORT     PORTB
 #define SS_BIT      2       // for PORTB: 2 = d.10, 1 = d.9, 0 = d.8
