@@ -11,5 +11,12 @@ The data should be posted by the Arduino or AVR-NetIO to a PHP/MySQL web server 
 
 The final goal is to log all data on the PHP/MySQL webserver and give various screens with graphs to show the logged data.
 
+DONE: 
+
+Code for Arduino UNO: see WebClientTemperature.ino
+Code for AvrNetIO:    see WebClientTemperatureNetIO.ino
+Web Server code done: see Wevserver directory
+
+ToDo: add Energy Cost receiver...
 
 All code is free for use.
