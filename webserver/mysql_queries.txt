@@ -1,0 +1,11 @@
+SELECT date_time
+FROM `avrdb`.`avrtemp` 
+where date_time >= DATE_SUB(NOW(), INTERVAL 1 HOUR);
+
+oder
+
+SELECT date_time
+FROM `avrdb`.`avrtemp` 
+where date_time >= DATE_SUB(NOW(), INTERVAL 1 DAY);
+
+

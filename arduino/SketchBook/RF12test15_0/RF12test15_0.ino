@@ -1,3 +1,71 @@
+// source http://forum.jeelabs.net/comment/4020
+
+/*
+  port of RF12demo15 for AVR NETIO (Pollin)
+  Atmega644 (Atmega32 does not support interrupts on D ports
+  for SPI:
+  ENC18J60  CS = pins_SS(PB4)!   nIRQ=pins_INT2(PB2)
+  SD Card   CS = SDcard_CS(PB3)  nIRQ=n/a
+  RFM12     CS = pins_OC1A(PD5)  nIRQ=pins_INT1(PD3)
+
+  Voltcraft Energycount 3000 decoder test app
+  senders are 868.388MHz, should be R2=A68D/A68C but best results with A67D (UNO test)
+  ?Protocol: FSK @ 868.3 MHz, deviation 150 KHz.
+  
+  TESTS
+  >P 686 6 0 0 
+  R2 A686 
+  R4 94C0 
+  R9 C4A3
+  #
+  The "P" command modifies the RFM12B registers R4 and R2. Therefore you'd have to set them with
+  R2 A686
+  R4 94A2
+  before an "E D" or "E C" after the "P" command.
+  
+  Should the "E D" / "E C" commands not report any "EC3K" packet lines, I'd suggest you experiment with the frequency, the AFC range limit, and maybe the bandwidth.
+  Frequency:
+  default is "R2 A686" 868.350MHz, "R2 A67D" sets 868.305MHz, "R2 A688" sets 868.360MHz, i.e. changing the R2 value (hexadecimal) by 1 changes the frequency by 0.005MHz.
+  AFC (Automatic Frequency Control) range limit:
+  default is "R9 C4A7" for +7 .. -8 frequency steps of 0.005MHz, "R9 C497" opens it wider to +15 .. -16 steps, "R9 C487" opens it to "no restrictions" maximum.
+  Bandwidth:
+  default is "R4 94A2" 134kHz, "R4 9482" sets 200kHz.  
+  ##################
+
+  Experiment with the datarate: default is "R3 C610" 20.284kbps, try "R3 C611" for 19.157kbps or "R3 C60F" for 21.552kbps.
+  I suggest this, because the "crl=" counts in the "recv" lines of your logs look too low to me. They count how many bytes were received with the CRL-bit ON (0x40 Clock Recocery Locked) in the RFM12B status register.
+  I usually get around crl=60 with my EC3ks.
+  
+  Update:
+  Maybe you'd better first narrow down the frequency: try "R2 A67B", "R2 A679" and lower until receiving gets worse.
+  
+  You can do that also with the "P" command, e.g. "P 67B 6 3 2" etc. until you do not get the single ca. 27000 microsecond pulses, but multiple ("pulse n=3 ...") or no pulses instead.
+  Then do it in the opposite direction, i.e. "P 67F 6 3 2", "P 681 6 3 2" etc, again until the single pulses start to disappear.
+  The average between the two first "P" parameters is then a good center frequency, e.g. with (66E+682)/2 = 678 you should use "R2 A678" before the "E D" / "E C" command.
+
+*/
+
+#include <Arduino.h>
+#include "arduino.h"
+
+#ifndef INPUT_PULLUP
+  #define INPUT_PULLUP 0x2
+#endif
+
+#define AVR_NET_IO
+//#undef AVR_NET_IO
+
+#ifdef AVR_NET_IO
+  #include <EtherCard.h>
+  #include <net.h>
+  // ethernet interface mac address, must be unique on the LAN
+  static byte mymac[] = { 0x00,0x22,0xf9,0x01,0xb2,0x28 };
+  static byte myip[] = { 192,168,0,13 };
+  static byte mymask[] = { 255,255,255,0 };
+  static byte mygw[]   = { 192,168,0,250 };
+  byte Ethernet::buffer[500];  
+#endif //AVR_NET_IO
+
 // RFM12 test for JeeLink(v3)
 //
 // $Id: RF12test.pde,v 1.55 2012/01/28 22:28:44 tsch Exp $
@@ -16,19 +84,23 @@
 #include <avr/pgmspace.h>
 #include <stdarg.h>
 
+#include <pins_arduino.h>
 
 #define DATAFLASH   0   // check for presence of DataFlash memory on JeeLink
 #define FLASH_MBIT  16  // JeeLink v3 dataflash 16 Mbit, other sizes: 4/8 Mbit
 			// RF12test does not yet support 4/8 Mbit dataflash
-
-#define LED_PIN 	13	// activity LED, comment out to disable
+#ifdef AVR_NET_IO
+  #define LED_PIN 	18  //PD4	// activity LED, comment out to disable
+#else
+  #define LED_PIN 	13	// activity LED, comment out to disable
+#endif //AVR_NET_IO
 
 //#define OPTIMIZE_SPI 1        //uncomment this to write to the RFM12B @ 8 Mhz
 //#define PINCHG_IRQ   1        // uncomment this to use pin-change interrupts
 
 // #define USE_EXECTIMES   1	// report execution times of code
-// #define USE_DRECVPOLL   1	// data receive also with polling
-// #define USE_TESTFIFO    1	// test RFM12B fifo levels and access methods
+#define USE_DRECVPOLL   1	// data receive also with polling
+#define USE_TESTFIFO    1	// test RFM12B fifo levels and access methods
 #define USE_XMODEM         1	// dataflash upload with XMODEM protocol
 #define USE_XMODEMCRC      1	// XMODEM protocol with CRC option
 
@@ -88,16 +160,38 @@ static void exectimeprt( PGM_P text )
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // RFM12B support for JeeLink ATmega328p
 // (derived from jeelabs RF12.zip 2011-08-22)
+#ifdef AVR_NET_IO
+  // ATmega644, 32 etc.
+  #define RFM_IRQ_PIN     PD3
+  #define RFM_INT	INT1
+  
+  //select pin, on ADDON this is PD5, see https://github.com/ethersex/ethersex/blob/master/pinning/hardware/netio_addon.m4
+  #define SS_DDR      DDRB	//ADDON DDRD
+  #define SS_PORT     PORTB	//ADDON PORTD
+  #define SS_BIT      3         //ADDON 5  // for PORTB: 2 = d.10, 1 = d.9, 0 = d.8
+  #define RFM_12_CS   PB3	//ADDON PD5
+  
+  // SPI_SS is connected to ADDON->SD CARD chip select, has to be put on high to not select SD Card
+  #define SPI_SS      SS   // PB4  //10      // do not change, must point to h/w SPI pin
+  #define SPI_MOSI    MOSI // PB5  //11
+  #define SPI_MISO    MISO // PB6  //12
+  #define SPI_SCK     SCK  // PB7  //13
 
-// ATmega328, etc.
-#define RFM_IRQ     2
-#define SS_DDR      DDRB
-#define SS_PORT     PORTB
-#define SS_BIT      2       // for PORTB: 2 = d.10, 1 = d.9, 0 = d.8
-#define SPI_SS      10      // do not change, must point to h/w SPI pin
-#define SPI_MOSI    11
-#define SPI_MISO    12
-#define SPI_SCK     13
+#else //not AVR_NET_IO
+  // ATmega328, etc.
+  #define RFM_IRQ_PIN     2  //PD2  //digital 2 //PCINT13
+  #define RFM_INT	  INT0
+
+  #define SS_DDR      DDRB
+  #define SS_PORT     PORTB
+  #define SS_BIT      2       // for PORTB: 2 = d.10, 1 = d.9, 0 = d.8
+  #define RFM_12_CS   PB2
+  
+  #define SPI_SS      SS //10      // do not change, must point to h/w SPI pin
+  #define SPI_MOSI    MOSI //11  //MOSI_PIN  //11
+  #define SPI_MISO    MISO //12  //MISO_PIN  //12
+  #define SPI_SCK     SCK //13  //SCK_PIN  //13
+#endif //AVR_NET_IO
 
 // RFM12B commands
 #define RF_STATUS_READ		0x0000
@@ -126,6 +220,12 @@ static void exectimeprt( PGM_P text )
 
 #define RF_MAX	128	// size of receive buffer
 
+//############### catch all undefined interrupts handler: ##################
+ISR(BADISR_vect){
+  Serial.println("DEBUG: bad_interrupt...");
+  activityLed(!digitalRead(LED_PIN));
+}
+
 // transceiver states
 enum {
     TXIDLE,
@@ -146,8 +246,11 @@ static struct rfm12reg rfm12dfl[16] PROGMEM = {
     { 0x8200,  // 0x8208   2 power management				82xx
       0xFF00,     0x820D },  // idle: !er !ebb !et !es  ex  eb !ew dc
     { 0xA000,  // 0xA680   3 frequency setting				Axxx
-//      0xF000,     0xA686 },  // 868.350 MHz
-      0xF000,     0xA67E },  // better
+#ifdef AVR_NET_IO
+      0xF000,     0xA686 },  // 868.350 MHz
+#else
+      0xF000,     0xA67E },  // 868.350 MHz
+#endif
     { 0xC600,  // 0xC623   4 data rate					C6xx
       0xFF00,     0xC610 },  // approx 20.3 kbps, i.e. 10000/29/(1+n) kbps
     { 0x9000,  // 0x9080   5 receiver control				9xxx
@@ -161,7 +264,11 @@ static struct rfm12reg rfm12dfl[16] PROGMEM = {
     { 0xB000,  // 0x0000   9 receiver fifo read command 		B000
       0x0000,     0x0000 },  // NO SETUP: readonly
     { 0xC400,  // 0xC4F7  10 AFC (AutoFrequencyControl) 		C4xx
+#ifdef AVR_NET_IO
+      0xFF00,     0xC4F7 },  // keep with VDI, +7..-8, !st, FI, OE, EN 
+#else
       0xFF00,     0xC4A7 },  // keep with VDI, +7..-8, !st, FI, OE, EN 
+#endif
     { 0x9800,  // 0x9800  11 transmitter configuration			98xx
       0xFE00,     0x9820 },  // !mp, 45kHz, 0dB power (max)
     { 0xCC12,  // 0xCC77  12 PLL setting				CCxx
@@ -252,25 +359,37 @@ static void spi_initialize( void )
 
     if ( spi_initdone )
 	return;
-    bitSet(SS_PORT, SS_BIT);
-    bitSet(SS_DDR, SS_BIT);
-    digitalWrite(SPI_SS, 1);
+    Serial.println("DEBUG: spi_initialize...");
+    //chip enable of RFM12
+    pinMode(RFM_12_CS, OUTPUT);
+    digitalWrite(RFM_12_CS, HIGH); 
+    //    bitSet(SS_PORT, SS_BIT);
+    //    bitSet(SS_DDR, SS_BIT);
+//set SPI_SS to ouput with pullup to set SPI Slave
     pinMode(SPI_SS, OUTPUT);
+    digitalWrite(SPI_SS, 1);
+
+#ifdef AVR_NET_IO  //disable ENC28J60 and SD Card
+    pinMode(PB4, OUTPUT);  //ENC28J60
+    digitalWrite(PB4, 1);  
+//    digitalWrite(PB3, 1);  pinMode(PB3, OUTPUT);  //SD Card
+#endif //AVR_NET_IO
+
     pinMode(SPI_MOSI, OUTPUT);
     pinMode(SPI_MISO, INPUT);
     pinMode(SPI_SCK, OUTPUT);
 #ifdef SPCR    
-    SPCR = _BV(SPE) | _BV(MSTR);    //Enable SPI
-#if F_CPU > 10000000
-    // use clk/2 (2x 1/4th) for sending (and clk/8 for recv, see rf12_xferSlow)
-    SPSR |= _BV(SPI2X);
-#endif
+        SPCR = _BV(SPE) | _BV(MSTR);    //Enable SPI
+    #if F_CPU > 10000000
+        // use clk/2 (2x 1/4th) for sending (and clk/8 for recv, see rf12_xferSlow)
+        SPSR |= _BV(SPI2X);
+    #endif
 #else
     // ATtiny
     USICR = bit(USIWM0);
 #endif    
-    pinMode(RFM_IRQ, INPUT);
-    digitalWrite(RFM_IRQ, 1); // pull-up
+    pinMode(RFM_IRQ_PIN, INPUT_PULLUP);
+    //digitalWrite(RFM_IRQ_PIN, 1); // pull-up
     spi_initdone = 1;
 }
 
@@ -370,26 +489,31 @@ uint16_t rf12_control( uint16_t cmd )
     retval = rf12_xferSlow(cmd);
     SREG = oldSREG;
 #else
-    byte intron = bitRead(EIMSK, INT0);
     #ifdef EIMSK
-      bitClear(EIMSK, INT0);
+      byte intron = bitRead(EIMSK, RFM_INT);
+      bitClear(EIMSK, RFM_INT);
       if ( index < alenof(rfm12regs) )
         rfm12regs[index] = cmd;       
         retval = rf12_xferSlow(cmd);
-      bitSet(EIMSK, INT0);
+      bitSet(EIMSK, RFM_INT);
     #else
       // ATtiny
-      bitClear(GIMSK, INT0);
+      bitClear(GIMSK, RFM_INT);
       uint16_t r = rf12_xferSlow(cmd);
-      bitSet(GIMSK, INT0);
+      bitSet(GIMSK, RFM_INT);
     #endif
 #endif
     return retval;  
 }
 
-// RFM12B interrupt service
+// ###################### RFM12B interrupt service ###########################
 static void rf12_interrupt( void )
 {
+  //see http://www.mikrocontroller.net/articles/AVR-GCC-Tutorial#Programmieren_mit_Interrupts
+  uint8_t tmp_sreg;  // temporaerer Speicher fuer das Statusregister
+  tmp_sreg = SREG;   // Statusregister (also auch das I-Flag darin) sichern
+  cli();             // Interrupts global deaktivieren
+  
     // a transfer of 2x 16 bits @ 2 MHz over SPI takes 2x 8 us inside this ISR
     uint16_t rf12stat = rf12_xfer(RF_STATUS_READ);
     rfm12istat = rf12stat;
@@ -423,20 +547,24 @@ static void rf12_interrupt( void )
 	    rf12_xfer(RF_IDLE_MODE);		// RSSI fall: stop receiver
 	}
     }
+   SREG = tmp_sreg;     // Status-Register wieder herstellen 
+                        // somit auch das I-Flag auf gesicherten Zustand setzen
 }
+
 #ifdef PINCHG_IRQ
-  #if RFM_IRQ < 8
-    ISR(PCINT2_vect) { if (!bitRead(PIND, RFM_IRQ)) rf12_interrupt(); }
-  #elif RFM_IRQ < 14
-    ISR(PCINT0_vect) { if (!bitRead(PINB, RFM_IRQ - 8)) rf12_interrupt(); }
+  #if RFM_IRQ_PIN < 8
+    ISR(PCINT2_vect) { if (!bitRead(PIND, RFM_IRQ_PIN)) rf12_interrupt(); }
+  #elif RFM_IRQ_PIN < 14
+    ISR(PCINT0_vect) { if (!bitRead(PINB, RFM_IRQ_PIN - 8)) rf12_interrupt(); }
   #else
-    ISR(PCINT1_vect) { if (!bitRead(PINC, RFM_IRQ - 14)) rf12_interrupt(); }
+    ISR(PCINT1_vect) { if (!bitRead(PINC, RFM_IRQ_PIN - 14)) rf12_interrupt(); }
   #endif
 #endif
+
 static void rf12_recvStart( void )
 {
-    byte intron = bitRead(EIMSK, INT0);
-    bitClear(EIMSK, INT0);
+    byte intron = bitRead(EIMSK, RFM_INT);
+    bitClear(EIMSK, RFM_INT);
     rxfill = 0; rxovr = 0; rxcrl = 0;		// reset for next receive block
     rxrssius = 0; rxtbegus = 0; rxtendus = 0;
     rxstate = TXRECV;
@@ -444,7 +572,7 @@ static void rf12_recvStart( void )
     rf12_xfer(rfm12regs[7-1] & ~0x0002);	// stop FIFO fill and ...
     rf12_xfer(rfm12regs[7-1] |  0x0002);	// ... (re)start FIFO fill
     if ( intron )
-	bitSet(EIMSK, INT0);
+	bitSet(EIMSK, RFM_INT);
 }
 
 static void rf12_recvStop( void )
@@ -484,18 +612,18 @@ static void rf12_regsinit( void )
 
 void rf12_initialize( byte irq_on )
 {
+    Serial.println("DEBUG: rf12_initialize...");
     byte	i;
     uint8_t oldSREG = SREG;  
     uint16_t	nval;
     long previousMillis = millis();  
     unsigned long currentMillis = previousMillis;    
     
-    bitClear(EIMSK, INT0);	// disable interrupt from RFM12
+    bitClear(EIMSK, RFM_INT);	// disable interrupt from RFM12
 
     spi_initialize();
 
-    pinMode(RFM_IRQ, INPUT);
-    digitalWrite(RFM_IRQ, 1); // pull-up
+    pinMode(RFM_IRQ_PIN, INPUT_PULLUP);//  digitalWrite(RFM_IRQ_PIN, 1); // pull-up
 
     rf12_xfer(RF_STATUS_READ); // intitial SPI transfer added to avoid power-up problem
 
@@ -503,13 +631,15 @@ void rf12_initialize( byte irq_on )
     
     // wait until RFM12B is out of power-up reset, this takes several *seconds*
     rf12_xfer(RF_TX_REG_WRITE); // txreg_write in case we're still in OOK mode
-    while ( (digitalRead(RFM_IRQ) == 0) && ((currentMillis - previousMillis) < 500) )
+    while ( (digitalRead(RFM_IRQ_PIN) == 0) && ((currentMillis - previousMillis) < 500) )
     {		
         rf12_xfer(RF_STATUS_READ);
         currentMillis = millis();   
     }
-    if (digitalRead(RFM_IRQ) == 0)
+    if (digitalRead(RFM_IRQ_PIN) == 0)
       Serial.println("RF12 IRQ Error !");
+    else
+      ; //Serial.println("DEBUG: RFM_IRQ_PIN low OK");  //hangs!
 
     if ( rfm12regs[0] == 0 ) {
 	// initially setup RFM12B register caches with defaults
@@ -530,38 +660,45 @@ void rf12_initialize( byte irq_on )
     rf12_xfer(rfm12regs[2-1] = RF_IDLE_MODE);
     rxstate = TXIDLE;
 #if PINCHG_IRQ
-    detachInterrupt(0);
+    Serial.println("DEBUG: rf12_initialize #if PINCHG_IRQ...");
+    detachInterrupt(RFM_INT);
     if ( irq_on != 0)
     {
-    #if RFM_IRQ < 8
-
-            bitClear(DDRD, RFM_IRQ);      // input
-            bitSet(PORTD, RFM_IRQ);       // pull-up
-            bitSet(PCMSK2, RFM_IRQ);      // pin-change
+      Serial.println("DEBUG: rf12_initialize irq_on=TRUE");
+    #if RFM_IRQ_PIN < 8
+            Serial.println("DEBUG: PINCHG_IRQ::RFM_IRQ_PIN < 8 ...");
+            bitClear(DDRD, RFM_IRQ_PIN);      // input
+            bitSet(PORTD, RFM_IRQ_PIN);       // pull-up
+            bitSet(PCMSK2, RFM_IRQ_PIN);      // pin-change
             bitSet(PCICR, PCIE2);         // enable
 
-    #elif RFM_IRQ < 14
-
-            bitClear(DDRB, RFM_IRQ - 8);  // input
-            bitSet(PORTB, RFM_IRQ - 8);   // pull-up
-            bitSet(PCMSK0, RFM_IRQ - 8);  // pin-change
+    #elif RFM_IRQ_PIN < 14
+            Serial.println("DEBUG: PINCHG_IRQ::RFM_IRQ_PIN < 14 ...");
+            bitClear(DDRB, RFM_IRQ_PIN - 8);  // input
+            bitSet(PORTB, RFM_IRQ_PIN - 8);   // pull-up
+            bitSet(PCMSK0, RFM_IRQ_PIN - 8);  // pin-change
             bitSet(PCICR, PCIE0);         // enable
 
     #else
-
-            bitClear(DDRC, RFM_IRQ - 14); // input
-            bitSet(PORTC, RFM_IRQ - 14);  // pull-up
-            bitSet(PCMSK1, RFM_IRQ - 14); // pin-change
+            Serial.println("DEBUG: PINCHG_IRQ::RFM_IRQ_PIN else ...");
+            bitClear(DDRC, RFM_IRQ_PIN - 14); // input
+            bitSet(PORTC, RFM_IRQ_PIN - 14);  // pull-up
+            bitSet(PCMSK1, RFM_IRQ_PIN - 14); // pin-change
             bitSet(PCICR, PCIE1);         // enable
 
     #endif
     }
+    else{
+      Serial.println("DEBUG: rf12_initialize irq_on=FALSE");
+    }
 #else    
+    Serial.println("DEBUG: rf12_initialize #else PINCHG_IRQ...");
     if ( irq_on != 0) {
-        attachInterrupt(0, rf12_interrupt, LOW);
-	bitSet(EIMSK, INT0);	// enable interrupt from RFM12
+      attachInterrupt(RFM_INT, rf12_interrupt, LOW);
+      //bitSet(EIMSK, RFM_INT);	// enable interrupt from RFM12
+      sei();
     } else
-        detachInterrupt(0);
+        detachInterrupt(RFM_INT);
 #endif 
 }
 
@@ -2118,7 +2255,7 @@ static void processrecv( byte opts )
 static void
 rfm12_restart( byte irq_on )
 {
-    byte		eint0 = bitRead(EIMSK, INT0);
+    byte		eint0 = bitRead(EIMSK, RFM_INT);
     uint16_t		stat  = rf12_control(RF_STATUS_READ);
 
     mprintf_P(PSTR("RFM12 hang: rfm12istat=%W stat=%W rxfill=%B rxovr=%W EI0=%B regs:\n"),
@@ -2885,6 +3022,11 @@ char helpText[] PROGMEM =
        "    flo,fhi 60..F3F	 lo,hi frequency * 2.5/5.0/7.5kHz" "\n"
        "    fstep    0..FF	 fstep * 2.5/5.0/7.5kHz in 433/868/915MHz band" "\n"
        "    us       0..FFFF	 delay after change frequency, default 250 usec" "\n"
+       "      - 868MHz band:" "\n"
+       "      freq = 10 * 2 * (43 + F/4000) MHz" "\n"
+       "      freq_kHz = 860000 + F * 5 kHz" "\n"
+       "      F = (freq_kHz - 860000) / 5" "\n"
+       "      F = 1600 .. 1720 = 0x640 .. 0x6B8 for 868.000 .. 868.600 MHz" "\n"
        " P freq bw lna rssi	scan radio pulses" "\n"
        "   freq 60..F3F 	 686=868.350MHz" "\n"
        "   bw    1..6		 400..67kHz  bandwidth" "\n"
@@ -3107,6 +3249,20 @@ void setup() {
 #endif
     comsetbaud(5);	// 57600 baud
     mprintnl();
+
+#ifdef AVR_NET_IO    
+    Serial.println("DEBUG: AVR_NET_IO startup...");
+    //ethernet
+    if (ether.begin(sizeof Ethernet::buffer, mymac,28) == 0)
+      Serial.println( "Failed to access Ethernet controller");
+    else
+      Serial.println( "Listening on 192.168.0.13");
+    ether.staticSetup(myip, mygw, mygw);
+    ether.copyIp(ether.mymask,mymask);
+#else
+    Serial.println("DEBUG: NO AVR_NET_IO startup...");
+#endif // AVR_NET_IO
+
     showProg();
     rf12_regsinit();
     df_initialize();
