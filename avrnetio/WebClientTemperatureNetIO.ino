@@ -25,7 +25,7 @@ only channel, temp and humidity are evaluated
 #undef USEDNS
 
 #define USEDHCP
-#undef SEDHCP
+#undef USEDHCP
 
 #define MYDEBUG
 //#undef MYDEBUG
@@ -104,7 +104,8 @@ static uint32_t timer;
   #define time_t long
 #endif
 time_t time_long;
-#define MAX_CHANNEL 3
+#define MAX_CHANNEL 4  //browseUrl without function if MAX_CHANNEL = 5, driving me crazy!
+
 //store last values
 typedef struct {
     long time_long;    //store int time of data update
@@ -253,18 +254,25 @@ void updateSensorData(byte channel, int temp, byte humi){
 //############################################
 //  sendData, channel=1 to 3
 //############################################
-void sendData(byte channel){
+void sendData(byte channel, int temp, byte humidity, long time_long){
   int idxChannel = channel - 1;
+  /*
   if(sensorData[idxChannel].bUpdated ==0){
-    sprintf(str, "channel %i not updated. No send. State now idle", channel);
-    Serial.println(str); 
+    Serial.print("channel "); Serial.print(channel); Serial.println(" not updated. No send. State now idle");
     state=idle;
     return;
   }
+  */
+  /*
   byte bchannel = sensorData[idxChannel].channel;
   int itemp = sensorData[idxChannel].temp;
   byte bhumi = sensorData[idxChannel].humidity;
   long ltime = sensorData[idxChannel].time_long;
+  */
+  byte bchannel = channel;
+  int itemp = temp;
+  byte bhumi = humidity;
+  long ltime = time_long;
   
   //ether.browseUrl(PSTR("/foo/"), "bar", website, my_callback);  //original OK, except you get a 404 not found error
   //ether.browseUrl(PSTR("/homewatch/"), "index.php", website, my_callback); // works OK
@@ -378,10 +386,21 @@ void loop () {
     Serial.println("timer1 elapsed");
     //updateSensorData(idx, 222, 55);
     for(int i=1; i<=MAX_CHANNEL; i++){
+      int idxChannel=i-1;
       Serial.println();
-      Serial.print("senddata(");Serial.print(i);Serial.println(")");
-      sendData(i);
-      ether.packetLoop(ether.packetReceive()); // Need to flush the received packet to clear the last transfer
+      Serial.print("senddata(");Serial.print(i);Serial.println(")?");
+
+      if(sensorData[i-1].bUpdated ==0){
+        Serial.print("channel "); Serial.print(i); Serial.println(" not updated. No send. State now idle");
+        state=idle;
+      }
+      else{
+        sendData(i, 
+          sensorData[idxChannel].temp, 
+          sensorData[idxChannel].humidity,
+          sensorData[idxChannel].time_long);
+        ether.packetLoop(ether.packetReceive()); // Need to flush the received packet to clear the last transfer
+      }
     }
     
     idx++;
