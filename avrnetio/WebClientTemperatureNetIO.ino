@@ -10,10 +10,13 @@ index.php?channel=1&temp=165&humidity=80&datetime=010120131234
 only channel, temp and humidity are evaluated
 */
 
+//v8 added watchdog for NETIO
+#include <avr/wdt.h>  //watchdog!
+
 #include <EtherCard.h>
 
 #include <SensorReceiver.h>
-//#include <SensorTransmitter.h>
+#include <SensorTransmitter.h>
 #include <InterruptChain.h>
 
 // Demo using DHCP and DNS to perform a web client request.
@@ -323,7 +326,7 @@ void setup () {
   Serial.begin(9600);
   // initialize the digital pin as an output.
   pinMode(LED, OUTPUT);     
-  Serial.println("\n[webClient]");
+  Serial.println("\n[webClientTemperatureNetIO v8]");
   #ifdef MYDEBUG
     Serial.println("\nMYDEBUG version");
   #else
@@ -371,6 +374,9 @@ void setup () {
   Timer1.attachInterrupt( timerIsr ); // attach the service routine here
 #endif
 
+  //enable watchdog for 8s interval
+  wdt_enable(WDTO_8S);
+  
   state=idle; //idle
 }
 
@@ -414,5 +420,9 @@ void loop () {
         state=idle;
     }
   }
+  
+  //reset watchdog
+  wdt_reset();
+
 }
 
