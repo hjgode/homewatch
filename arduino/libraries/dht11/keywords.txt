@@ -1,0 +1,3 @@
+dht11	KEYWORD1
+decodeThermoHygro	KEYWORD2
+ThermoHygroDecoder	KEYWORD1
