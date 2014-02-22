@@ -7,8 +7,7 @@ $passwd="chopper";
 $names=array(
 1 => "Aussen",
 2 => "Schlaf",
-3 => "Andreas",
-4 => "Bad");
+3 => "Andreas");
 $DEBUG=false;
 
 function openDB(){
@@ -50,7 +49,6 @@ function openDB(){
 	"`humidity` int(11), " .
 	"`state` int(11), " .
 	"`date_time` TIMESTAMP, " .
-	"`state` int(11), " .
 	"PRIMARY KEY (`id`) );";
 	$result = mysql_query($query, $link);
 	if(!$result){
@@ -66,30 +64,6 @@ function openDB(){
 
 function addData($c,$t,$h){
 	global $DEBUG;
-<<<<<<< HEAD
-	$state=0;
-	if($c==4){
-		if($t%10==5) //did we get a temp ending on 5?
-			$state=1;
-		$dateTimeNow=date('Y-m-d H:i:s');
-		$query="INSERT INTO avrtemp (`channel`,`temp`,`humidity`,`date_time`,`state` )".
-              " VALUES ( $c,$t,$h,".
-			  " DATE_FORMAT('".$dateTimeNow."', ".
-              " '%Y-%c-%d %H:%i:%s'), $state )";
-	}
-	else{
-		$lastStoredDateTime=getLastStoredDateTime();
-		if($DEBUG){
-			echo "<p>" . $c . "</p>\n";
-			echo "<p>LastDateTime=".$lastStoredDateTime."</p>\n";
-		}
-		// add data but do not save seconds (use 00)
-		$query="INSERT INTO avrtemp (`channel`,`temp`,`humidity`,`date_time`)".
-	              " VALUES ( $c,$t,$h,".
-				  " DATE_FORMAT('".$lastStoredDateTime."', ".
-	              " '%Y-%c-%d %H:%i'), $state)";
-	}
-=======
 	$lastStoredDateTime=getLastStoredDateTime();
 	if($DEBUG){
 		echo "<p>" . $c . "</p>\n";
@@ -112,7 +86,6 @@ function addData($c,$t,$h){
 //			  " DATE_FORMAT(NOW()),".
 			  " DATE_FORMAT('".$lastStoredDateTime."', ".
               " '%Y-%c-%d %H:%i'), $state )";
->>>>>>> c61e355ff8cdda6de5ba7c0109c5a1dbc855bed4
 	if($DEBUG)
 		echo "<p>" . $query;
 	$result = mysql_query($query);
@@ -178,41 +151,6 @@ function listData(){
 	// "&chd=t:".$lasthum.
 	// "&chl=".$lasthum.
 	// "&chtt=Feuchte'>";
-}
-
-function listDataOfChannel($ch){
-	global $DEBUG;
-	global $names;
-	$result = mysql_query("SELECT channel, temp, humidity, date_time FROM `avrtemp` WHERE channel=".$ch." GROUP BY date_time order by date_time DESC LIMIT 100");
-	if (!$result) {
-	echo "query failed: " . mysql_error();
-	return;
-	}
-	    echo "<table border='1' cellpadding='1'>";
-	    echo "<tr><th>Kanal</th><th>Temp</th><th>Feuchte</th><th>Zeit</th></tr>";
-	    $lasttemp;
-	while ($row = mysql_fetch_array($result)) {
-	$name = $names[$row["channel"]];
-	$lastname = $name;
-	echo "<tr>";
-	$temperatur1 = $row["temp"] / 10;
-	$lasttemp=$temperatur1;
-	$lasthum=$row['humidity'];
-	//$temperatur10 = $row["temp"] % 10;
-	//$temperatur = $temperatur1 . "," . $temperatur10;
-	echo "<td>" . $name . "</td>" .
-	"<td align='right'>" . $temperatur1 . "</td>" .
-	"<td align='right'>" . $row["humidity"] . "</td>" .
-	"<td>" . $row["date_time"] . "</td>";
-	echo "</tr>";
-	}
-	echo "</table>";
-	// http://www.freeduino.de/node/2110
-
-	echo "<table border='1' cellpadding='2'";
-	echo "<tr><td valign='top'>" . $lastname . "</td><td>" . showChart("temp", $lasttemp) . "</td>";
-	echo "<td>" . showChart("humi", $lasthum) . "</td></tr>";
-	echo "</table>";
 }
 
 function getLastStoredDateTime(){
