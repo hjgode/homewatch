@@ -38,9 +38,10 @@ function dataStartEnd($mystart, $myend){
     //Get the data from the database
 	$sqlQuery=
 	   "SELECT * FROM ".
-	   "(SELECT DATE_FORMAT(date_time,'%Y%m%d%H%i') as dtime, temp/10 as temp1, humidity, channel, state FROM avrtemp ".
+	   "(SELECT DATE_FORMAT(date_time,'%Y%m%d%H%i') as dtime, temp/10 as temp1, humidity, channel, state * 10 as state1 FROM avrtemp ".
+	   " where channel=4 ".
 	   " GROUP BY dtime ".
-	   " where channel=4 ORDER BY dtime ASC) as bad ".
+	   " ORDER BY dtime ASC) as bad ".
 	   " WHERE dtime > ".$mystart." AND dtime < ".$myend." ".
 	   ";";
 	if($DEBUG)
@@ -59,18 +60,22 @@ function dataStartEnd($mystart, $myend){
         //Set chd parameter to no value
         $chd = '';
 
-	    $chd.="['Zeit','Temperatur','Luftfeuchte'],";
+	    $chd.="['Zeit','Temperatur','Luftfeuchte', 'state'],";
 	    //Start to compile the data
 	    for ($row = 0; $row < $countData; $row++) {
 		    //Check for a value if one exists, add to $chd
 		    if(isset($dataResult[$row]['dtime']) &&
 		       isset($dataResult[$row]['temp1']) &&
-		       isset($dataResult[$row]['humidity']) 
+		       isset($dataResult[$row]['humidity']) &&
+		       isset($dataResult[$row]['state1']) 
 		    )
 		    {
-			    $chd .= "['".$dataResult[$row]['dtime']."',".
+			    $chd .= "[".
+			        "'".$dataResult[$row]['dtime']."',".
 				    $dataResult[$row]['temp1'].",".
-				    $dataResult[$row]['humidity']."],\r\n";
+				    $dataResult[$row]['humidity'].",".
+				    $dataResult[$row]['state1'].
+				    "],\r\n";
 		    }
 	    }
 	    if($DEBUG)
@@ -197,7 +202,7 @@ if( isset($_GET['cmd']) ){
             $endValue=$_GET['end'];
             //
             $data = dataStartEnd($startValue,$endValue);
-			echo "<img src='phpplot1.php?channel=4&start=".$startValue."&end=".$endValue."'>";
+			echo "<img src='phpplot2.php?channel=4&start=".$startValue."&end=".$endValue."'>";
             if($data){
                 //displayArray($data);
 	            echo "    <script type='text/javascript'>\r\n";

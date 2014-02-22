@@ -48,6 +48,7 @@ function openDB(){
 	"`channel` int(11), " .
 	"`temp` int(11), " .
 	"`humidity` int(11), " .
+	"`state` int(11), " .
 	"`date_time` TIMESTAMP, " .
 	"`state` int(11), " .
 	"PRIMARY KEY (`id`) );";
@@ -65,6 +66,7 @@ function openDB(){
 
 function addData($c,$t,$h){
 	global $DEBUG;
+<<<<<<< HEAD
 	$state=0;
 	if($c==4){
 		if($t%10==5) //did we get a temp ending on 5?
@@ -87,6 +89,30 @@ function addData($c,$t,$h){
 				  " DATE_FORMAT('".$lastStoredDateTime."', ".
 	              " '%Y-%c-%d %H:%i'), $state)";
 	}
+=======
+	$lastStoredDateTime=getLastStoredDateTime();
+	if($DEBUG){
+		echo "<p>" . $c . "</p>\n";
+		echo "<p>LastDateTime=".$lastStoredDateTime."</p>\n";
+	}
+	//state HACK
+	$state=0;
+	if($c==4){
+	    if($t % 10 == 5)
+	        $state=1;
+	}
+	if($DEBUG){
+		echo "<p>temp=" . $t . "</p>\n";
+		echo "<p>state=".$state."</p>\n";
+	}
+	
+	// add data but do not save seconds (use 00)
+	$query="INSERT INTO avrtemp (`channel`,`temp`,`humidity`,`date_time`, `state`)".
+              " VALUES ( $c,$t,$h,".
+//			  " DATE_FORMAT(NOW()),".
+			  " DATE_FORMAT('".$lastStoredDateTime."', ".
+              " '%Y-%c-%d %H:%i'), $state )";
+>>>>>>> c61e355ff8cdda6de5ba7c0109c5a1dbc855bed4
 	if($DEBUG)
 		echo "<p>" . $query;
 	$result = mysql_query($query);
