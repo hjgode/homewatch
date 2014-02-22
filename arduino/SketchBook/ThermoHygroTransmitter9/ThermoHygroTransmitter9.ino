@@ -1,6 +1,12 @@
 //added LCD
 //adding intelligence...
 //added newBuffer
+//added RCswitch
+
+#include <RCSwitch.h>
+RCSwitch mySwitch;// = RCSwitch();
+#define RC_SWITCH_SYSTEM_CODE "00001"
+#define RC_SWITCH_SWITCH_CODE "00001"
 
 #include <Sleep_n0m1.h>
 Sleep sleep;
@@ -18,6 +24,7 @@ static boolean bValidData=false;
 #include <LiquidCrystal.h>
 // initialize the library with the numbers of the interface pins
 LiquidCrystal lcd(lcd_rs, lcd_enable, 4, 5, 6, 7);
+char* lcdAnim[] = {"|","/","-","\\"};
 
 #include "newBuffer.h"
 newBuffer send_buffer;
@@ -64,7 +71,7 @@ int lastHumi=0;
  }
 
 void showLCD(int temp, int humi, unsigned char state){
-  lcd.setCursor(0, 1);
+  lcd.setCursor(0, 1); //setCursor(col,row)
   lcd.print(temp);
   lcd.print("*C ");
   lcd.print(humi);
@@ -73,7 +80,14 @@ void showLCD(int temp, int humi, unsigned char state){
   if(state==0)
     lcd.print("off");
   else
-    lcd.print("ON");
+    lcd.print("ON ");
+    
+  //read long time Min value
+  byte bMin = send_buffer.getMin2();
+  
+  lcd.print(" ");
+  lcd.print(bMin);
+  
   lcdON();
 //  delay(3000);
 //  lcdOFF();
@@ -84,6 +98,27 @@ void lcdON(){
 }
 void lcdOFF(){
   digitalWrite(lcd_backlight, LOW);
+}
+
+//switch ELRO wireless power outlet
+void switchOnOff(bool bOnOff){
+  if(bOnOff){
+    Serial.println("SWITCH ON");
+    mySwitch.switchOn(RC_SWITCH_SYSTEM_CODE, RC_SWITCH_SWITCH_CODE);
+  }
+  else{
+    Serial.println("SWITCH OFF");
+    mySwitch.switchOff(RC_SWITCH_SYSTEM_CODE, RC_SWITCH_SWITCH_CODE);
+  }
+}
+
+void animateLCD(){
+  static int iCnt=0;
+  lcd.setCursor(14,0);
+  lcd.print(lcdAnim[iCnt]);
+  iCnt++;
+  if(iCnt==4)
+    iCnt=0;
 }
 
 void setup(){
@@ -97,7 +132,7 @@ void setup(){
 
   lcd.begin(16, 2);
   // Print a message to the LCD.
-  lcd.print("Temp. / Feuchte");
+  lcd.print("Temp/Feuchte"); //12 chars
 //  lcdOFF();  
   lcdON();
   // Initialize the send buffer that we will use to send data
@@ -105,10 +140,25 @@ void setup(){
   send_buffer.init(5);
   send_buffer.setTreshold(5);
   send_buffer.setMaxDuration1(10);
+
+  //init RCswitch instance
+  mySwitch = RCSwitch();
+  // Transmitter is connected to Arduino Pin #3  
+  // shared with SensorTransmitter code 
+  mySwitch.enableTransmit(TX_DATA_PIN);
+  // Optional set protocol (default is 1, will work for most outlets)
+  mySwitch.setProtocol(1);
+  
+  // Optional set number of transmission repetitions.
+  //mySwitch.setRepeatTransmit(2); //stops working!
+  
+  //initialy switch power outlet OFF
+  switchOnOff(false);
 }
 
 void loop(){
   //do stuff
+    animateLCD();
     Serial.println("...waked up");
     float humidity = sensor.getHumidity();
     float temperature = sensor.getTemperature();
@@ -122,7 +172,6 @@ void loop(){
       lastTemp=(int)temperature;
       lastHumi=(int)humidity;     
       showLCD(lastTemp, lastHumi, send_buffer.getState1());
-
     }
     else{
       bValidData=false;
@@ -136,6 +185,12 @@ void loop(){
 
         send_buffer.push((byte)lastHumi);
         state=send_buffer.getState1();
+        //send switch command
+        if(state==0)
+          switchOnOff(false);
+        else
+          switchOnOff(true);
+          
         int x=0;
         Serial.println("============================");
         for(x=0; x<send_buffer.getSize1(); x++){
