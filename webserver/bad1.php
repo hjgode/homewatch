@@ -39,6 +39,7 @@ function dataStartEnd($mystart, $myend){
 	$sqlQuery=
 	   "SELECT * FROM ".
 	   "(SELECT DATE_FORMAT(date_time,'%Y%m%d%H%i') as dtime, temp/10 as temp1, humidity, channel, state FROM avrtemp ".
+	   " GROUP BY dtime ".
 	   " where channel=4 ORDER BY dtime ASC) as bad ".
 	   " WHERE dtime > ".$mystart." AND dtime < ".$myend." ".
 	   ";";
@@ -64,15 +65,12 @@ function dataStartEnd($mystart, $myend){
 		    //Check for a value if one exists, add to $chd
 		    if(isset($dataResult[$row]['dtime']) &&
 		       isset($dataResult[$row]['temp1']) &&
-		       isset($dataResult[$row]['humidity']) &&
-			   isset($dataResult[$row]['state']) 
+		       isset($dataResult[$row]['humidity']) 
 		    )
 		    {
 			    $chd .= "['".$dataResult[$row]['dtime']."',".
 				    $dataResult[$row]['temp1'].",".
-				    $dataResult[$row]['humidity'].",".
-				    $dataResult[$row]['state'].
-					"],\r\n";
+				    $dataResult[$row]['humidity']."],\r\n";
 		    }
 	    }
 	    if($DEBUG)
@@ -208,7 +206,7 @@ if( isset($_GET['cmd']) ){
                 echo "    </script>\r\n";
             }
             else{
-                echo "<p>NO DATA</p>";
+                echo "<p>NO selection DATA</p>";
             }
                 
         }
