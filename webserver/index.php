@@ -44,7 +44,7 @@ else
 echo "<p><a href='linechart_hour.php'>Stunden-&Uuml;bersicht</a></p>";
 echo "<p><a href='barchart_days.php'>Tages-&Uuml;bersicht</a></p>";
 echo "<p><a href='http://www.unwetterzentrale.de/uwz/getwarning_de.php?plz=41363&uwz=UWZ-DE&lang=de'>Unwetterwarnungen J&uuml;chen</a></p>";
-echo "<p><a href='bad.php'>Bad Daten</a></p>";
+echo "<p><a href='bad2.php'>Bad Daten</a></p>";
 
 echo showAllCharts();
 //#################################################################################

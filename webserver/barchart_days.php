@@ -116,9 +116,11 @@ openDB();
 showBarDays(1);
 showBarDays(2);
 showBarDays(3);
+showBarDays(4);
 echo "<div id='chart_div1' style='width: 900px; height: 500px;'></div>";
 echo "<div id='chart_div2' style='width: 900px; height: 500px;'></div>";
 echo "<div id='chart_div3' style='width: 900px; height: 500px;'></div>";
+echo "<div id='chart_div4' style='width: 900px; height: 500px;'></div>";
 
 echo "<p>v0.8" . "</body>" . "</html>";
 

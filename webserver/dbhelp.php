@@ -7,7 +7,8 @@ $passwd="chopper";
 $names=array(
 1 => "Aussen",
 2 => "Schlaf",
-3 => "Andreas");
+3 => "Andreas",
+4 => "Bad");
 $DEBUG=false;
 
 function openDB(){
@@ -205,10 +206,12 @@ function showAllCharts(){
 	$images=Array(
 		1 => "<img src='house.png' height='64'/>",
 		2 => "<img src='bed.png' height='32'/>",
-		3 => "<img src='teddy.png' height='48'/>'");
+		3 => "<img src='teddy.png' height='48'/>'",
+		4 => "<img src='bad.png' height='48'/>'"
+		);
 
 	$htmltext.="\n<table border='1'>";
-	for($id=1; $id<=3; $id++){
+	for($id=1; $id<=4; $id++){
 		$query="Select temp*.1 as temp1,humidity,channel,date_time, DATE_FORMAT(date_time, '%d.%m.%Y<p>%k:%i</p>') as date_timeStr FROM `avrtemp` WHERE channel=".$id." ORDER by date_time DESC LIMIT 1;";
 		$result = mysql_query($query);
 		if ($result) {
@@ -283,3 +286,4 @@ function displayArray($val)
 }
 
 ?>
+

@@ -124,10 +124,12 @@ openDB();
 showLineChart(1);
 showLineChart(2);
 showLineChart(3);
+showLineChart(4);
 echo "<div id='chart_div1' style='width: 900px; height: 500px;'></div>";
 echo "<div id='chart_div2' style='width: 900px; height: 500px;'></div>";
 echo "<div id='chart_div3' style='width: 900px; height: 500px;'></div>";
+echo "<div id='chart_div4' style='width: 900px; height: 500px;'></div>";
 
-echo "<p>v0.7" . "</body>" . "</html>";
+echo "<p>v0.8" . "</body>" . "</html>";
 ?>
 
