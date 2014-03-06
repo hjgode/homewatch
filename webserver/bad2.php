@@ -5,7 +5,8 @@ echo "<head>";
 echo "</head>";
 echo "<body>" .	"<h1>AVR Temperatur und Luftfeuchte im Bad v0.2</h1>";
 
-require 'dbhelp.php';
+require_once 'dbhelp.php';
+require_once 'phpplot2.php';
 
 $DEBUG=false;
 
@@ -201,8 +202,12 @@ if( isset($_GET['cmd']) ){
             $startValue=$_GET['start'];
             $endValue=$_GET['end'];
             //
-            $data = dataStartEnd($startValue,$endValue);
-			echo "<img src='phpplot2.php?channel=4&start=".$startValue."&end=".$endValue."'>";
+            $data = dataStartEnd($startValue,$endValue); //draws google chart
+            $channel=4;
+            $data=getData($channel, $startValue, $endValue);
+            plotGraph($data); //draws phpplot2.png
+            echo "<img src='./phpplot2.png'>";
+			//echo "<img src='phpplot2.php?channel=4&start=".$startValue."&end=".$endValue."'>";
             if($data){
                 //displayArray($data);
 	            echo "    <script type='text/javascript'>\r\n";

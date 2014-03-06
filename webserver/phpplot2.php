@@ -52,7 +52,10 @@ function getData($channel, $mystart, $myend){
 
 function plotGraph($data){
 	//Define the object
-	$plot = new PHPlot();
+	$plot = new PHPlot(800,400);
+
+    $plot->SetIsInline(true);
+    $plot->SetOutputFile('phpplot2.png');
 
 	$example_data=$data;
 	$plot->SetDataValues($example_data);
@@ -93,9 +96,11 @@ function plotGraph($data){
         plotGraph($data);
     }
     else{
+/*
         $currentscript=$_SERVER['PHP_SELF'];
         echo "<html><body><a href='";
         echo $currentScript . "?start=201402070000&end=201402072359";
         echo "'>test</a></body></html>";
+*/
     }	
 ?>
