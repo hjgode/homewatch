@@ -5,9 +5,12 @@ echo "<head>";
 echo "</head>";
 echo "<body>" .	"<h1>AVR Temperatur und Luftfeuchte per Tag</h1>";
 
-require 'dbhelp.php';
+require_once 'dbhelp.php';
+require_once 'phplotbars.php';
+//require_once 'phplot.php';
 
 $DEBUG=false;
+
 
 function showBarDays($channelID){
     global $DEBUG;
@@ -112,15 +115,24 @@ function showBarDays($channelID){
 }
 
 //html code
+/*
 openDB();
 showBarDays(1);
 showBarDays(2);
 showBarDays(3);
 showBarDays(4);
+
 echo "<div id='chart_div1' style='width: 900px; height: 500px;'></div>";
 echo "<div id='chart_div2' style='width: 900px; height: 500px;'></div>";
 echo "<div id='chart_div3' style='width: 900px; height: 500px;'></div>";
 echo "<div id='chart_div4' style='width: 900px; height: 500px;'></div>";
+
+//$data=getBarData(1);
+*/
+plotBarsImage(1); //create img file
+plotBarsImage(2); //create img file
+plotBarsImage(3); //create img file
+plotBarsImage(4); //create img file
 
 echo "<p>v0.8" . "</body>" . "</html>";
 
