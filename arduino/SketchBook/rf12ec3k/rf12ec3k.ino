@@ -1,3 +1,4 @@
+#define _JEENODE_
 // RFM12 test for JeeLink(v3)
 //
 // $Id: RF12test.pde,v 1.55 2012/01/28 22:28:44 tsch Exp $
@@ -8,7 +9,7 @@
 //  #Id: RF12demo.pde 7754 2011-08-22 11:38:59Z jcw $
 //  2009-05-06 <jcw@equi4.com> http://opensource.org/licenses/mit-license.php
 
-#define PROGNAME	"RF12test"
+#define PROGNAME	"rf12ec3k"
 #define PROGVERS	"15"
 
 #include <util/crc16.h>
@@ -92,7 +93,7 @@ static void exectimeprt( PGM_P text )
 // (derived from jeelabs RF12.zip 2011-08-22)
 
 // ATmega328, etc.
-#define RFM_IRQ     7
+#define RFM_IRQ     2
 #define SS_DDR      DDRB
 #define SS_PORT     PORTB
 #define SS_BIT      2       // for PORTB: 2 = d.10, 1 = d.9, 0 = d.8
@@ -149,7 +150,11 @@ static struct rfm12reg rfm12dfl[16] PROGMEM = {
       0xFF00,     0x820D },  // idle: !er !ebb !et !es  ex  eb !ew dc
     { 0xA000,  // 0xA680   3 frequency setting				Axxx
 //      0xF000,     0xA686 },  // 868.350 MHz
-      0xF000,     0xA67E },  // better
+#ifdef _JEENODE_
+      0xF000,     0xA67D },  // better for JeeNode
+#else
+      0xF000,     0xA67E },  // better for Arduino and NETIO
+#endif
     { 0xC600,  // 0xC623   4 data rate					C6xx
       0xFF00,     0xC610 },  // approx 20.3 kbps, i.e. 10000/29/(1+n) kbps
     { 0x9000,  // 0x9080   5 receiver control				9xxx
