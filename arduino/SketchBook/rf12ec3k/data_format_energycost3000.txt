@@ -1,0 +1,15 @@
+http://forum.jeelabs.net/node/3412679.html?page=1
+
+byte - data
+0,1 - device id
+2,3 - time on_tot (s)
+4-7 - time on (s)
+8-14 - Energy in Ws
+15,16 - current power (in Wx10)
+17,18 - max power (in Wx10)
+19-21 - Energy in Ws
+22-37 - unknown
+36?-37 - # of resets, don't know how large this value can become
+38-40 - hash, in 0x0HHHH0, with H the hash
+41 - End of transmission? (seems to be constant)
+
