@@ -15,11 +15,14 @@ function getPlotBarData($channelID){
     // #query average temp for days
     $sqlQuery = 
 //    	"SELECT day1,temp1, humi1 FROM (".
-    	"SELECT day1,temp1 FROM (".
+//    	"SELECT day1, min1, avg1-min1 as avg2, max1-avg1 as max2 FROM (".
+    	"SELECT day1, min1, avg1, max1 FROM (".
 		"	SELECT * FROM ( ".
 		"		SELECT channel, ".
 		"		DAY(date_time) as day1,  ".
-		"		AVG(temp)*.1 as temp1, ".
+		"		MAX(temp)*.1 as max1, ".
+		"		AVG(temp)*.1 as avg1, ".
+		"		MIN(temp)*.1 as min1, ".
 		"		AVG(humidity) as humi1, ".
 		"		date_time, ".
 		"		DATE_FORMAT(date_time, '%j') as dayofyear ".
@@ -62,20 +65,21 @@ function plotBarData($dataArray, $title){
 
     $data=$dataArray;
     
-    $plot = new PHPlot(300, 200);
+    $plot = new PHPlot(400, 300);
     $plot->SetIsInline(true);
     $plot->SetOutputFile($title.'.png');
     
     $plot->SetImageBorderType('plain');
 
     $plot->SetPlotType('bars');
+    //$plot->SetPlotType('stackedbars');
     //$plot->SetPlotType('lines');
     $plot->SetDataType('text-data');
     //$plot->SetDataType('data-data');
 
     $plot->SetPlotAreaWorld(NULL, -10, NULL, 35);
     $plot->SetDataValues($data);
-    $plot->SetDataColors(array('red','blue'));
+    $plot->SetDataColors(array('red','blue','green','yellow'));
     
     # Main plot title:
     $plot->SetTitle($title);
@@ -84,7 +88,8 @@ function plotBarData($dataArray, $title){
     $plot->SetShading(0);
 
     # Make a legend for the 3 data sets plotted:
-    $plot->SetLegend(array('temp'));
+    $plot->SetLegend(array('min','avg','max'));
+    //$plot->SetLegendPosition(0, 0, 'image', 0, 0, 35, 5);
 
     # Turn off X tick labels and ticks because they don't apply here:
     $plot->SetXTickLabelPos('none');
