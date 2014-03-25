@@ -1,0 +1,33 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="ec3k_gateway/socketPort.cs">
+    <Files>
+      <File FileName="ec3k_gateway/Main.cs" Line="20" Column="39" />
+      <File FileName="ec3k_gateway/sport.cs" Line="18" Column="1" />
+      <File FileName="ec3k_gateway/log.cs" Line="12" Column="4" />
+      <File FileName="ec3k_gateway/portStream.cs" Line="64" Column="4" />
+      <File FileName="ec3k_gateway/socketPort.cs" Line="58" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="ec3k_gateway" expanded="True">
+            <Node name="socketPort.cs" selected="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State>
+          <Value>s</Value>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

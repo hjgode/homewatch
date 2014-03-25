@@ -1,0 +1,6 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=ec3k_gateway
+Exec=ec3k_gateway
+Terminal=false
