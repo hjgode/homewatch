@@ -41,6 +41,9 @@
     <Compile Include="log.cs" />
     <Compile Include="portStream.cs" />
     <Compile Include="socketPort.cs" />
+    <Compile Include="tcpclientserver.cs" />
+    <Compile Include="ec3k_data.cs" />
+    <Compile Include="http_get.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.desktop">
