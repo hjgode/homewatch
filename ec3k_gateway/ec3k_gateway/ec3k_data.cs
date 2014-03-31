@@ -49,7 +49,7 @@ namespace ec3k_gateway
 					_sID=splitted[2].Substring(3);
 					_total=Convert.ToUInt32(splitted[3]);
 					_onTime=Convert.ToUInt32(splitted[5]);
-					_usedWs=Convert.ToUInt32(splitted[7].Substring(2),16); //from hex 0x...
+					_usedWs=Convert.ToUInt64(splitted[7].Substring(2),16); //from hex 0x...
 					_currentWatt=Convert.ToDecimal(splitted[9]);
 					_maxWatt=Convert.ToDecimal(splitted[11]);
 					_numResets=Convert.ToUInt16(splitted[13]);

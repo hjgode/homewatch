@@ -27,6 +27,7 @@ namespace ec3k_gateway
 
 		Thread _readThread=null;
 		bool bRunThread=true;
+        http_get _httpget = new http_get();
 
 		Queue<string> sendQueue=new Queue<string>();
 		Thread _sendThread=null;
@@ -43,27 +44,33 @@ namespace ec3k_gateway
 			//_listener=new TcpListener(IPAddress.Any,_iPort);
 
 			_client=new TcpClient();
-			_client.Connect(_sHost,_iPort);
-			_socketStream = _client.GetStream();
-			_reader=new StreamReader(_socketStream, System.Text.Encoding.UTF8);
-			_writer=new StreamWriter(_socketStream, System.Text.Encoding.UTF8);
+            try
+            {
+                _client.Connect(_sHost, _iPort);
+                _socketStream = _client.GetStream();
+                _reader = new StreamReader(_socketStream, System.Text.Encoding.UTF8);
+                _writer = new StreamWriter(_socketStream, System.Text.Encoding.UTF8);
 
-			_readThread=new Thread(new ThreadStart(this._threadRead));
-			_readThread.Start();
+                _readThread = new Thread(new ThreadStart(this._threadRead));
+                _readThread.Start();
 
-			_sendThread=new Thread(new ThreadStart(this._threadSend));
-			_sendThread.Start();
+                _sendThread = new Thread(new ThreadStart(this._threadSend));
+                _sendThread.Start();
 
-			sendData("R2 A67A\n");
-			Thread.Sleep(1000);
-			sendData("EC\n");
+                sendData("R2 A67A\n");
+                Thread.Sleep(1000);
+                sendData("EC\n");
+            }
+            catch (Exception ex)
+            {
+                log.addLog("Exception in tcpclientserver: " + ex.Message);
+            }
 
 		}
 
 		void _threadRead(){
-			addLog("thread start");
-			http_get _httpget=new http_get();
-			do{
+            addLog("_threadRead start");
+			while(bRunThread){
 				try {
 					//blocking read
 					string sRead="";
@@ -79,11 +86,11 @@ namespace ec3k_gateway
 					addLog(_ec3k.dump());
 
 				} catch (Exception ex) {
-					addLog("_thread: " + ex.Message);
+                    addLog("_threadRead: " + ex.Message);
 				}
-			}while(bRunThread);
-			_httpget.Dispose();
-			addLog("thread stopped");
+			};
+            _reader.Dispose();
+            addLog("_threadRead stopped");
 		}
 
 		void _threadSend(){
@@ -113,8 +120,9 @@ namespace ec3k_gateway
 		}
 
 		public void Dispose(){
+			bRunThread=false;
+
 			if(_readThread!=null){
-				bRunThread=false;
 				_readThread.Abort();
 			}
 			if(_sendThread!=null){
@@ -128,6 +136,9 @@ namespace ec3k_gateway
 				_socketStream.Close();
 			if(_client!=null)
 				_client.Close();
+            if(_httpget!=null)
+                _httpget.Dispose();
+
 		}
 		void addLog(string s){
 			System.Diagnostics.Debug.WriteLine(s);
