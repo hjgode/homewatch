@@ -19,7 +19,7 @@ namespace ec3k_gateway
 		EC3K 3178864728 ID=1B67 37107341 sT 5581560 sON 0x0001ACF88D32 Ws 0.2 W 2217.6 Wmax 1 resets ON
 		*/
 		public bool _bValid=false;
-		string _sID="";
+		public string _sID="";
 		ulong _ticks=0;
 		ulong _total=0;
 		ulong _onTime=0;
@@ -32,6 +32,9 @@ namespace ec3k_gateway
 		public static uint _errorCount=0;
 		public static uint _totalCount=0;
 
+		public ec3k_data ()
+		{
+		}
 		public ec3k_data (string sToParse)
 		{
 			_totalCount++;
@@ -107,11 +110,29 @@ namespace ec3k_gateway
 			return sb.ToString();
 		}
 
+/* GET /homewatch/power/index.php?
+		id=1E0E
+		&ticks=1056852848
+		&total=37071698
+		&ontime=37057879
+		&usedws=9332520423
+		&currentw=1.2
+		&maxw=2080.8
+		&numresets=2
+		&status=True
+		HTTP/1.1
+*/
 		public string getPostString(){
 			StringBuilder sb=new StringBuilder();
 			sb.Append("id="+this._sID+"&");
 			sb.Append("ticks="+this._ticks.ToString()+"&");
 			sb.Append("total="+this._total.ToString()+"&");
+			sb.Append("ontime="+this._onTime.ToString()+"&");
+			sb.Append("usedws="+this._usedWs.ToString()+"&");
+			sb.Append("currentw="+this._currentWatt.ToString()+"&");
+			sb.Append("maxw="+this._maxWatt.ToString()+"&");
+			sb.Append("numresets="+this._numResets.ToString()+"&");
+			sb.Append("status="+this._statusON.ToString());
 
 			return sb.ToString();
 		}

@@ -1,18 +1,19 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="ec3k_gateway/socketPort.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="ec3k_gateway/tcpclientserver.cs">
     <Files>
-      <File FileName="ec3k_gateway/Main.cs" Line="20" Column="39" />
-      <File FileName="ec3k_gateway/sport.cs" Line="18" Column="1" />
+      <File FileName="ec3k_gateway/Main.cs" Line="12" Column="35" />
+      <File FileName="ec3k_gateway/sport.cs" Line="1" Column="1" />
       <File FileName="ec3k_gateway/log.cs" Line="12" Column="4" />
-      <File FileName="ec3k_gateway/portStream.cs" Line="64" Column="4" />
-      <File FileName="ec3k_gateway/socketPort.cs" Line="58" Column="1" />
+      <File FileName="ec3k_gateway/tcpclientserver.cs" Line="172" Column="17" />
+      <File FileName="ec3k_gateway/ec3k_data.cs" Line="107" Column="4" />
+      <File FileName="ec3k_gateway/http_get.cs" Line="52" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="ec3k_gateway" expanded="True">
-            <Node name="socketPort.cs" selected="True" />
+            <Node name="tcpclientserver.cs" selected="True" />
           </Node>
         </State>
       </Pad>
@@ -21,7 +22,8 @@
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
         <State>
-          <Value>s</Value>
+          <Value>sGet</Value>
+          <Value>_sID</Value>
         </State>
       </Pad>
     </Pads>

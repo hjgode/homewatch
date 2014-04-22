@@ -36,6 +36,16 @@ namespace ec3k_gateway
 		//##########
 		List<ec3k_data> _ec3kdata=new List<ec3k_data>();
 
+		ec3k_data _ec3k_1=new ec3k_data();
+		ec3k_data _ec3k_2=new ec3k_data();
+		ec3k_data _ec3k_3=new ec3k_data();
+
+		DateTime lastSend=DateTime.Now;
+#if DEBUG
+		TimeSpan timespanMin = new TimeSpan(0,1,0);
+#else
+		TimeSpan timespanMin = new TimeSpan(0,5,0);
+#endif
 		public tcpclientserver (string sHost, int iPort)
 		{
 			_sHost=sHost;
@@ -59,7 +69,9 @@ namespace ec3k_gateway
 
                 sendData("R2 A67A\n");
                 Thread.Sleep(1000);
-                sendData("EC\n");
+				sendData("R9 C4A4\n");
+                Thread.Sleep(1000);
+				sendData("EC\n");
             }
             catch (Exception ex)
             {
@@ -70,8 +82,11 @@ namespace ec3k_gateway
 
 		void _threadRead(){
             addLog("_threadRead start");
+			TimeSpan timeSpan;
+			lastSend=DateTime.Now;
 			while(bRunThread){
 				try {
+
 					//blocking read
 					string sRead="";
 					sRead = _reader.ReadLine();
@@ -81,8 +96,32 @@ namespace ec3k_gateway
 					_ec3kdata.Add(_ec3k);
 
 					addLog(sRead);
-					if(_ec3k._bValid)
-						_httpget.add(_ec3k);
+					if(_ec3k._bValid){
+						if(_ec3k._sID.Equals("1B67"))
+							_ec3k_1=_ec3k;
+						else if(_ec3k._sID.Equals("22F0"))
+							_ec3k_2=_ec3k;
+						else if(_ec3k._sID.Equals("1E0E"))
+							_ec3k_3=_ec3k;
+						timeSpan=DateTime.Now-lastSend;
+						if(timeSpan>=timespanMin){
+							if(_ec3k_1._bValid){
+								_httpget.add(_ec3k_1);
+								_ec3k_1=new ec3k_data();
+							}
+							if(_ec3k_2._bValid){
+								_httpget.add(_ec3k_2);
+								_ec3k_2=new ec3k_data();
+							}
+							if(_ec3k_3._bValid){
+								_httpget.add(_ec3k_3);
+								_ec3k_3=new ec3k_data();
+							}
+							lastSend=DateTime.Now;
+						}
+					}
+					//sleep some time
+					Thread.Sleep(1000*10);//10 seconds
 					addLog(_ec3k.dump());
 
 				} catch (Exception ex) {
@@ -93,9 +132,11 @@ namespace ec3k_gateway
             addLog("_threadRead stopped");
 		}
 
+		AutoResetEvent sendWait=new AutoResetEvent(false);
 		void _threadSend(){
 			addLog("send thread start");
 			do{
+				sendWait.WaitOne(); //blocks until there is something to send, signaled by write function
 				try {
 					//blocking read
 					//byte b= (byte)_fs.ReadByte();
@@ -109,6 +150,7 @@ namespace ec3k_gateway
 				} catch (Exception ex) {
 					addLog("_threadSend: " + ex.Message);
 				}
+				Thread.Sleep(1000);
 			}while(bRunThread);
 			addLog("send thread stopped");
 		}
@@ -117,6 +159,7 @@ namespace ec3k_gateway
 			lock(lockQueue){
 				sendQueue.Enqueue(s);
 			}
+			sendWait.Set();
 		}
 
 		public void Dispose(){
@@ -126,6 +169,7 @@ namespace ec3k_gateway
 				_readThread.Abort();
 			}
 			if(_sendThread!=null){
+				sendWait.Set();
 				_sendThread.Abort();
 			}
 			if(_reader!=null)
