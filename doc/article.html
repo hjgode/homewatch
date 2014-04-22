@@ -1,0 +1,301 @@
+
+<h2>Introduction</h2><p>
+        I always aware of relative humidity in our bath room. Recently we buyed an air dryer, but I was very dis-satisfied by the on-off cycles of this stupid device. Although I set it to 70 or 80% RH, it switches on for very short periods at times I did not see this high humidity. I am already driving a network of wireless sensors within the 433MHz band and fill a database with the readings of three sensors. I added one more using one Arduino Uno R3 with a DHT22 sensor and a 433MHz transmitter. So I could track the temperature and humidity values of the bath too.</p><p>In general controlling humidity can often not be done simply by watching for the current RH% and then switch on or off a dryer or fan. RH% will vary with temperature changes and depends on the outside humidity. In example you will not reach 50% relative humidity (RH) in a room, if the ouside has 75% RH and the room is not sealed. </p><p>I decided to control the air dryer from the arduino with some better logic then just going on/off at a specific humidity level.
+
+
+    </p><h2>Background </h2><p>
+        When showring starts in the bath, the humidity rapidly grows. I would like the arduino to recognize this peak change and to switch the dryer on for a maximum time. </p><p>As the arduino was already equiped with the 433MHz transmitter and there are power switches that are also controlled by 433MHz and I would like to avoid any contact with high voltage, I decided to control the power from the same transmitter. </p><p>So, we have the arduino, a DHT22 (the DHT11 was too bad), a 433 MHz receiver. For some visual feedback I added a LCD, but it is not needed for the function.
+
+
+    </p><h2>Using the code  </h2><p>
+        The code uses two buffers to store the recent humidity measurements. Only the last values are kept. Every time a new value is pushed, the oldest value is removed. I use one 'short-time' buffer, which is updated every minute. The second buffer is the long-time buffer (memory), which is filled every time when the buffer capacity of the first buffer is reached. So lets say I store 5 values at all in the first buffer, then the second buffer is updated on every 5th update. </p><p>If the newest value is above a treshold of the last one and the values are increasing, I set a state flag which represents the powering of the dryer. The second buffer is currently not used but would be usefull to switch the dryer off, when the humidity is below the normal long-time values.</p><p>I have implemented a base class (using code of circular buffer) and init two of these buffer classes in my new class.
+
+    </p><p>
+        ByteBuffer.h (a 'stack' like buffer):
+
+
+</p><pre>#include &lt;stdlib.h&gt;&lt;br /&gt;&lt;br /&gt;#ifndef BYTEBUFFER_H
+#define BYTEBUFFER_H
+
+#define byte unsigned char
+
+class ByteBuffer
+{
+public:
+    ByteBuffer();
+
+    // This method initializes the datastore of the buffer to a certain sizem the buffer should NOT be used before this call is made
+    void init(unsigned int buf_size);
+
+    // This method resets the buffer into an original state (with no data)
+    void clear();
+
+    // This releases resources for this buffer, after this has been called the buffer should NOT be used
+    void deAllocate();
+
+    // Returns how much space is left in the buffer for more data
+    int getSize();
+
+    // Returns the maximum capacity of the buffer
+    int getCapacity();
+
+    // This method returns the byte that is located at index in the buffer but doesn't modify the buffer like the get methods (doesn't remove the retured byte from the buffer)
+    byte peek(unsigned int index);
+
+    //
+    // Put methods, either a regular put in back or put in front
+    //
+    int putInFront(byte in);
+    int put(byte in);
+
+    int push(byte in);    //HGO
+    byte getMedian();    //HGO
+    byte getMax();    //HGO
+    byte getMin();    //HGO
+    byte getState();    //HGO
+    void setTreshold(byte t);    //HGO
+    byte getTreshold();    //HGO
+    int getDirection();
+    int getStateDuration();
+
+    int putIntInFront(int in);
+    int putInt(int in);
+
+    int putLongInFront(long in);
+    int putLong(long in);
+
+    int putFloatInFront(float in);
+    int putFloat(float in);
+
+    //
+    // Get methods, either a regular get from front or from back
+    //
+    byte get();
+    byte getFromBack();
+
+    int getInt();
+    int getIntFromBack();
+
+    long getLong();
+    long getLongFromBack();
+
+    float getFloat();
+    float getFloatFromBack();
+
+    void setMaxDuration(int);
+
+protected:
+    byte* data;
+
+    unsigned int capacity;
+    unsigned int position;
+    unsigned int length;
+    byte state;
+    byte treshold;
+
+    int stateDuration;  //start if state=1 for
+    int maxDuration;    //max duration (ie 5)
+    int direction;
+};
+
+#endif // BYTEBUFFER_H </pre><p>This class is used two times for a long and short time storage in NewBuffer:</p><pre>#ifndef NEWBUFFER_H&lt;br /&gt;#define NEWBUFFER_H&lt;br /&gt;
+#include &quot;ByteBuffer.h&quot;
+
+
+class newBuffer
+{
+    public:
+        newBuffer();
+        ~newBuffer();
+        void init(int s);
+        ByteBuffer bytebuffer1;
+        ByteBuffer bytebuffer2;
+
+        byte peek1(unsigned int index);
+        byte peek2(unsigned int index);
+        int getSize1();
+        int getSize2();
+           byte getMedian1();    //HGO
+        byte getMax1();    //HGO
+        byte getMin1();    //HGO
+        byte getState1();    //HGO
+        byte getTreshold1();    //HGO
+
+           byte getMedian2();    //HGO
+        byte getMax2();    //HGO
+        byte getMin2();    //HGO
+        byte getState2();    //HGO
+        void setTreshold(byte t);    //HGO
+        byte getTreshold2();    //HGO
+
+        int getDirection1();
+        int getStateDuration1();
+        int getDirection2();
+        int getStateDuration2();
+        void setMaxDuration1(int);
+        void setMaxDuration2(int);
+
+        int put(byte in);
+        int push(byte);
+
+    protected:
+        int iCount;
+        byte treshold;
+        int capacity;
+
+        int maxDuration;    //max duration (ie 5)
+    private:
+};
+
+#endif // NEWBUFFER_H
+
+     </pre><p>You see there are getters to get values from the short a long time buffer.</p><p>The main work is done when a new value is pushed to the stack: </p><pre>int newBuffer::push(byte in){&lt;br /&gt;    //static byte lastByte;&lt;br /&gt;    iCount++;
+    bytebuffer1.push(in);
+    if(iCount==capacity){
+        bytebuffer2.push(in);
+        iCount=0;
+    }
+    return 0;
+}  </pre><p>You see that the second (long time) buffer get's a push only every x times.</p><p>The arduino sketch: </p><pre>...&lt;br /&gt;void setup(){&lt;br /&gt;  Serial.begin(SERIAL_BAUD);
+  Serial.println(&quot;ThermoHygroTransmitter version 4 (power save 2)&quot;);
+  sensor.setup(DHT_DATA_PIN);
+    
+  sleepTime=10000; //10 seconds 
+  
+  pinMode(lcd_backlight, OUTPUT);
+
+  lcd.begin(16, 2);
+  // Print a message to the LCD.
+  lcd.print(&quot;Temp/Feuchte&quot;); //12 chars
+//  lcdOFF();  
+  lcdON();
+  // Initialize the send buffer that we will use to send data
+  //ByteBuffer send_buffer;
+  send_buffer.init(5);
+  send_buffer.setTreshold(5);
+  send_buffer.setMaxDuration1(10);
+
+  //init RCswitch instance
+  mySwitch = RCSwitch();
+  // Transmitter is connected to Arduino Pin #3  
+  // shared with SensorTransmitter code 
+  mySwitch.enableTransmit(TX_DATA_PIN);
+  // Optional set protocol (default is 1, will work for most outlets)
+  mySwitch.setProtocol(1);
+  
+  // Optional set number of transmission repetitions.
+  //mySwitch.setRepeatTransmit(2); //stops working!
+  
+  //initialy switch power outlet OFF
+  switchOnOff(false);
+}
+
+void loop(){
+  //do stuff
+    animateLCD();
+    Serial.println(&quot;...waked up&quot;);
+    float humidity = sensor.getHumidity();
+    float temperature = sensor.getTemperature();
+    if(strcmp(sensor.getStatusString(),&quot;OK&quot;)==0){
+      bValidData=true;
+      lastTemp=(int)temperature;
+      lastHumi=(int)humidity;     
+      showLCD(lastTemp, lastHumi, send_buffer.getState1());
+    }
+    else{
+      bValidData=false;
+    }
+    Serial.print(&quot;sendCount=&quot;); Serial.println(sendCount);
+    if(sendCount &gt;= sendInterval){
+      sendCount=0;
+     // Displays temperatures from -10 degrees Celsius to +20,
+     // and humidity from 10% REL to 40% REL, with increments of 2
+     if(bValidData) {
+
+        send_buffer.push((byte)lastHumi);
+        state=send_buffer.getState1();
+        //send switch command
+        if(state==0)
+          switchOnOff(false);
+        else
+          switchOnOff(true);
+          
+        int x=0;
+        Serial.println(&quot;============================&quot;);
+        for(x=0; x&lt;send_buffer.getSize1(); x++){
+          Serial.print(&quot;[&quot;); 
+          Serial.print(send_buffer.peek1(x));
+          Serial.print(&quot;]&quot;); 
+        }
+        Serial.println(&quot;\n============================&quot;);
+
+       // Temperatures are passed at 10 times the real value,
+       // to avoid using floating point math.
+       ///transmitter.sendTempHumi(i * 10, i + 20);
+       //HACK: send temp with ending in 5 (which is .5 degree clesius if state==1
+       // if state==0 send temp with ending in 0
+       if(state==1)
+         transmitter.sendTempHumi(lastTemp * 10 + 5, lastHumi);
+       else
+         transmitter.sendTempHumi(lastTemp * 10, lastHumi);
+       
+       Serial.println(&quot;Transmit done&quot;);
+       blinkLEDfast();
+       // Wait two seconds before sending next.
+       bValidData=false;
+       showLCD(lastTemp, lastHumi, state);
+       
+     }//validData
+   }//send_loop
+   //delay(1000);
+  sendCount++;
+  blinkLED();
+
+  Serial.println(&quot;About to sleep...&quot;);
+  delay(200);
+  sleep.pwrDownMode(); //set sleep mode
+  sleep.sleepDelay(sleepTime); //sleep for: sleepTime
+}
+      </pre><p>Here is the push of the new measured RH value and the check of the state property to switch an outlet on/off:</p><pre>        send_buffer.push((byte)lastHumi);&lt;br /&gt;        state=send_buffer.getState1();&lt;br /&gt;        //send switch command
+        if(state==0)
+          switchOnOff(false);
+        else
+          switchOnOff(true);</pre><p>When a new value is pushed, we do some calculations and start/continue the powering of a dryer fan using the state var: </p><pre>int ByteBuffer::push(byte in){&lt;br /&gt;    if(length &lt; capacity){
+        // save data byte at end of buffer
+        data[(position+length) % capacity] = in;
+        // increment the length
+        length++;
+//        return 1;
+    }
+    else{
+        //move all one down
+        unsigned int i=0;
+        for(i=0; i&lt;length-1; i++)
+            data[i]=data[i+1];
+        data[length-1]=in;
+
+    }
+    //check if to switch FAN on and keep for nexxt 5 iteratrions
+    if( ((getMax()-getMin())&gt;treshold) &amp;&amp; (getDirection()&gt;0) ){
+        //set state=1 only if stateDuration is less then maxDuration
+        if(stateDuration&lt;maxDuration){
+            state=1;
+        }
+    }
+    if(state==1 || stateDuration&gt;0)
+        stateDuration++;    //increment stateDuration
+    if(stateDuration&gt;maxDuration){
+        if(state==1){
+            state=0;
+        }
+        stateDuration=0;
+    }
+     return 0;
+}
+ </pre><p>The above code first pushes the new value onto the stack. If the stack is full in regards of the number of maximum values, the oldest value is removed.</p><p>Then we check if max and min of all values is greater than a treshold and if the value shows an increase. If so, we start to set the state var. The state var is used to control the powering of a dryer fan and will remain set for maxDuration push cycles. So we do not switch on/off the fan directly pending to the values but implement a follow-up time. As we push a new value every minute and maxDusration is 9, we have a follow-up time of 9 minutes. </p><p>As I log (send) all values to a php/mysql web server, I can control what the sketch does:</p><img src="http://hjgode.de/homewatch/phpplot2_7march.png" />As you see, the state powered the outlet three times, every time the treshold of the humidity increase was hit. We are three people showering at the morning ;-)
+<h2>Acknowledements: </h2><p>ByteBuffer is based on <a title="Circular Buffer" target="_blank" href="http://siggiorn.com/?p=460">Circular Buffer</a> </p><p><a title="fuzzylogic 433MHz for arduino" href="https://bitbucket.org/fuzzillogic/433mhzforarduino/wiki/Home">fuzzylogic 433MHz for arduino</a> for his SensorTransmitter code </p><p><a href="http://code.google.com/p/rc-switch/">rc-switch code</a> to control the 433MHz wireless power outlet</p><h2>ToDo: </h2><p>Cleanup unused code from ByteBuffer and newBuffer
+
+    </p>
+
+
+
