@@ -13,3 +13,12 @@ byte - data
 38-40 - hash, in 0x0HHHH0, with H the hash
 41 - End of transmission? (seems to be constant)
 
+id              : f100
+uptime          : 4004 seconds
+since last reset: 37809 seconds
+energy          : 385300 Ws
+current power   : 1.3 W
+max power       : 2.3 W
+energy          : 4579600 Ws
+
+

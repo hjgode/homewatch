@@ -14,9 +14,9 @@ echo "<body>" .	"<h2>Temperatur und Luftfeuchte</h2>";
 // Host: about.com
 // http://192.168.0.40/homewatch/index.php?channel=1&temp=165&humidity=80&datetime=010120131234
 if($DEBUG){
-       print("<pre>");
-print_r($_GET);
-print("</pre>");
+    print("<pre>");
+    print_r($_GET);
+    print("</pre>");
 }
 
 openDB();
@@ -41,10 +41,12 @@ else
   //listData();
   //echo "<p>missing arg";
 }
+
 echo "<p><a href='linechart_hour.php'>Stunden-&Uuml;bersicht</a></p>";
 echo "<p><a href='barchart_days.php'>Tages-&Uuml;bersicht</a></p>";
 echo "<p><a href='http://www.unwetterzentrale.de/uwz/getwarning_de.php?plz=41363&uwz=UWZ-DE&lang=de'>Unwetterwarnungen J&uuml;chen</a></p>";
 echo "<p><a href='bad2.php'>Bad Daten</a></p>";
+echo "<p><a href='./power/index.php'>Strom-Verbrauch</a></p>";
 
 echo showAllCharts();
 //#################################################################################

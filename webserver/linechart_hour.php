@@ -46,6 +46,10 @@ function showLineChart($channelID){
 		displayArray($dataResult);
 
 	$countData = count($dataResult);
+	if($countData<48){
+	   echo "<h3>Temperatur und Luftfeuchte von ".$names[$channelID]."</h3>zu wenig daten letzte 48 Stunden!<br>";
+	   return;
+	}
 	//Set chd parameter to no value
 	$chd = '';
 	//Limit 
@@ -130,6 +134,6 @@ echo "<div id='chart_div2' style='width: 900px; height: 500px;'></div>";
 echo "<div id='chart_div3' style='width: 900px; height: 500px;'></div>";
 echo "<div id='chart_div4' style='width: 900px; height: 500px;'></div>";
 
-echo "<p>v0.8" . "</body>" . "</html>";
+echo "<p>v0.9" . "</body>" . "</html>";
 ?>
 
