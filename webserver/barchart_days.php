@@ -16,7 +16,7 @@ function showBarDays($channelID){
     global $DEBUG;
     global $names;
 
-    // #query average temp for hours
+    // #query average temp for days
     $sqlQuery = 
     	"SELECT * FROM (".
 		"	SELECT * FROM ( ".

@@ -3,10 +3,15 @@ use avrdb;
 select pwrid, 
 ROUND(usedws/60/60/1000) as usedkwh,
 ontime*100/total as ontimes,
-ROUND(total/60/60/24) as totaldays  
+ROUND(total/60/60/24) as totaldays
 from powerusage 
 where pwrid='22F0' 
-order by pwrid, date_time limit 40;
+order by total DESC limit 1;
+
+select MAX(usedws)/60/60, pwrid, total/60/60/24 as days from 
+powerusage
+where pwrid in (select distinct pwrid from powerusage)
+order by total DESC;
 
 select pwrid, 
 ROUND(usedws/60/60/1000) as usedkwh,
@@ -28,6 +33,11 @@ order by date_time DESC;
 select pwrid,currentw,date_time 
 from powerusage 
 order by date_time DESC LIMIT 3;
+
+select pwrid,currentw, max(date_time) as date_time
+from powerusage
+group by pwrid
+ LIMIT 3;
 
 SELECT usedws as minusedws,  
 MIN(date_time) AS MinTimeStamp

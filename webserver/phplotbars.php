@@ -35,7 +35,8 @@ function getPlotBarData($channelID){
 		"	WHERE day1 is not null ".
 		"	AND DATE_FORMAT(now(), '%j') - dayofyear < 14  ".
 		"	ORDER BY date_time ASC) as mydays ".
-		"order by date_time ASC".
+		"order by date_time ASC ".
+		"LIMIT 14 ". //last 2 weeks
 		";";
 		
     $sqlResult = mysql_query($sqlQuery);

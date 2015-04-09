@@ -1,3 +1,4 @@
+//#define use_net
 using System;
 using System.IO;
 using System.Threading;
@@ -7,14 +8,17 @@ namespace ec3k_gateway
 {
 	public class portStream:IDisposable
 	{
-		//string _sPortName = "/dev/ttyUSB0";// real port
+#if use_net
+		string _sPort="/dev/pts/2";
+#else
+		string _sPort = "/dev/ttyUSB0";// real port
 //		string _sPortName = "/dev/pts/2";// virtual ser2net port
 		//server:
 		// _serialport=new SerialPort(_sPortName, baudRate 
 		//client:
 		// socat -d -d -d pty,link=$HOME/dev/ttyV0,waitslave tcp:atom2:3333
 		// then minicom -D ~/dev/ttyV0 -b 57600
-		string _sPort="/dev/pts/2";
+#endif
 		FileStream _fs=null;
 		Thread _readThread=null;
 		bool bRunThread=true;

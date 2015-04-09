@@ -1,3 +1,5 @@
+//#define use_net
+
 using System;
 
 namespace ec3k_gateway
@@ -9,9 +11,11 @@ namespace ec3k_gateway
 			Console.WriteLine ("Hello World!");
 			//portStream ps=new portStream("/dev/pts/2");
 			//socketPort sp=new socketPort("atom2",3333);
+#if use_net
 			tcpclientserver tcp=new tcpclientserver("atom2", 3333);
-
-			//sport myPort=new sport();
+#else
+			sport myPort=new sport();
+#endif
 			bool bExit=false;
 			string sSend="";
 			do{
@@ -22,7 +26,11 @@ namespace ec3k_gateway
 					if(ki.Key==ConsoleKey.Enter)
 					{
 						//sSend+="\n"; sendData uses writeline
+#if use_net
 						tcp.sendData(sSend);
+#else
+						myPort.writeCOMM(sSend+"\n");
+#endif
 						sSend="";
 					}
 					else
@@ -33,7 +41,11 @@ namespace ec3k_gateway
 			//myPort.Dispose();
 			//ps.Dispose();
 			//sp.Dispose();
+#if use_net
 			tcp.Dispose();
+#else
+			myPort.Dispose();
+#endif
 		}
 	}
 }

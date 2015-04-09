@@ -21,8 +21,8 @@ function openDB(){
 		echo mysql_error();
 	}
 	else
-		if($DEBUG)
-			echo "SqlConnect OK";
+	    if($DEBUG)
+	        echo "SqlConnect OK";
 
 	$query="CREATE database IF NOT EXISTS avrdb;";
 		$result = mysql_query($query, $link);
@@ -154,7 +154,24 @@ function listData(){
 	// "&chtt=Feuchte'>";
 }
 
+function diff75($wert1, $wert2){
+   if($wert1==$wert2){
+      return $wert1;
+   }
+   // 20 -> 10 normal=15, bei 75% nur 20-3.75
+   if($wert1>$wert2){
+      $diff=(($wert2-$wert1)/2)/100*75;
+      return $wert1-$diff;
+   }
+   // 10 -> 20 normal=15, bei 75 nur 13.75
+   if($wert1<$wert2){
+      $diff=(($wert2-$wert1)/2)/100*75;
+      return $wert1+$diff;
+   }
+}
+
 function getLastStoredDateTime(){
+    OpenDB();
 	global $DEBUG;
 	$lDate_time=date('i'); //retrun only minutes
 	$dateTimeNow=date('Y-m-d H:i:00');
@@ -211,6 +228,13 @@ function showAllCharts(){
 		);
 
 	$htmltext.="\n<table border='1'>";
+	$aussentemp=0;
+	$innentemp=0;
+	$aussenfeuchte=0;
+	$innenfeuchte=0;
+	$innenfeuchteberechnet=0;
+	$innentempberechnet=0;
+	$lueftenjanein=0;
 	for($id=1; $id<=4; $id++){
 		$query="Select temp*.1 as temp1,humidity,channel,date_time, DATE_FORMAT(date_time, '%d.%m.%Y<p>%k:%i</p>') as date_timeStr FROM `avrtemp` WHERE channel=".$id." ORDER by date_time DESC LIMIT 1;";
 		$result = mysql_query($query);
@@ -220,10 +244,44 @@ function showAllCharts(){
 				$image = $images[$row["channel"]];
 				$temperature = $row["temp1"];
 				$humidity = $row["humidity"];
+				// see http://web-docs.gsi.de/~giese/luftfeuchtigkeit.php
+				if($id==1){ //aussen
+				   $aussentemp=$temperature;
+				   $aussenfeuchte=$humidity;
+				}
+				if($id==2) { //schlafzimmer
+				   $innentemp=$temperature;
+				   if($innentemp>$aussentemp){
+				      $innenfeuchteberechnet=
+				      $aussenfeuchte-3*($innentemp-$aussentemp);
+				   }else{
+				      $innenfeuchteberechnet=
+				      $aussenfeuchte-3*($aussentemp-$innentemp);
+				   }
+				   if($innenfeuchteberechnet<$innenfeuchte){
+				      $lueftenjanein=1;
+				   }else{
+				      $lueftenjanein=0;
+				   }
+			                   $innentempberechnet=($innentemp+$aussentemp)/2;
+				}
+		//$innentempberechnet=diff75($innentempberechnet,$innentemp); //75% austausch
+		//$innenfeuchteberechnet=diff75($innenfeuchteberechnet, $innenfeuchte);
 				$htmltext.="\n<tr>";
 				$htmltext.="<td align='center'>".$image."<p><small>".$row['date_timeStr']."</small></p></td>";
-				$htmltext.="<td>".showChart("temp", $temperature)."</td>";
-				$htmltext.="<td>".showChart("humi", $humidity)."</td>";
+				$htmltext.="<td align='center'>".showChart("temp", $temperature);
+				if($id==2){
+				   $htmltext.="<br>lueften->".$innentempberechnet."</td>";
+				}else{
+				   $htmltext.="</td>";
+				}
+				if($id==2){
+				   $htmltext.="<td align='center'>".showChart("humi", $humidity).
+				   "<br>"."lueften?->".$innenfeuchteberechnet.
+				   "</td>";
+				}else{
+				   $htmltext.="<td>".showChart("humi", $humidity)."</td>";
+				}
 				$htmltext.="\n</tr>";
 			}
 		}
