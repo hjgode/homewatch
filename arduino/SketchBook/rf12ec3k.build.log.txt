@@ -1,0 +1,230 @@
+
+
+
+
+
+
+
+
+
+
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-g++ -c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -mmcu=atmega644 -DF_CPU=16000000L -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=103 -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/variants/avrnetio /tmp/build3008917402474327025.tmp/rf12ec3k.cpp -o /tmp/build3008917402474327025.tmp/rf12ec3k.cpp.o 
+rf12ec3k.ino:195: warning: ‘__progmem__’ attribute ignored
+rf12ec3k.ino:51: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:145: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘uint16_t rf12_control(uint16_t)’:
+rf12ec3k.ino:365: warning: unused variable ‘oldSREG’
+rf12ec3k.ino:375: warning: unused variable ‘intron’
+rf12ec3k.ino: In function ‘void rf12_initialize(byte)’:
+rf12ec3k.ino:490: warning: unused variable ‘oldSREG’
+rf12ec3k.ino: In function ‘void _pfstartexit(boolean, const prog_char*)’:
+rf12ec3k.ino:796: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:797: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘void pfexitnp(const prog_char*, size_t)’:
+rf12ec3k.ino:811: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘void getline(char*, byte)’:
+rf12ec3k.ino:848: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:854: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: At global scope:
+rf12ec3k.ino:977: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:978: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:979: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:980: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1022: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘byte xminit()’:
+rf12ec3k.ino:1082: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: At global scope:
+rf12ec3k.ino:1163: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘byte regcmd2idx(byte)’:
+rf12ec3k.ino:1175: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1183: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1189: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘void dmpreg(byte)’:
+rf12ec3k.ino:1199: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘void dmpchgdreg(word, byte)’:
+rf12ec3k.ino:1232: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘void scanfrequband(byte, word, word, word, word)’:
+rf12ec3k.ino:1312: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1322: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1353: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1374: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1316: warning: unused variable ‘bwfstep’
+rf12ec3k.ino:1319: warning: unused variable ‘bw’
+rf12ec3k.ino: In function ‘void scanpulses(word, byte, byte, byte)’:
+rf12ec3k.ino:1401: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1433: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1436: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: At global scope:
+rf12ec3k.ino:1555: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1669: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino:1678: warning: large integer implicitly truncated to unsigned type
+rf12ec3k.ino: In function ‘void ec3kreport(uint8_t*, byte)’:
+rf12ec3k.ino:1818: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1822: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1824: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1834: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1836: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1836: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1837: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1795: warning: unused variable ‘losec’
+rf12ec3k.ino: In function ‘void hexdumpspc(uint8_t*, size_t, uint8_t)’:
+rf12ec3k.ino:1855: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘void reportrxblock(byte, byte)’:
+rf12ec3k.ino:1923: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1924: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘byte processec3k(byte, byte*)’:
+rf12ec3k.ino:1965: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:1994: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘void rfm12_restart(byte)’:
+rf12ec3k.ino:2047: warning: unused variable ‘eint0’
+rf12ec3k.ino:2048: warning: unused variable ‘stat’
+rf12ec3k.ino: In function ‘void drecvintr(byte)’:
+rf12ec3k.ino:2079: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘byte descrarg2opts(uint8_t)’:
+rf12ec3k.ino:2129: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘void reportsync(const prog_char*, datadtsyn*)’:
+rf12ec3k.ino:2377: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2379: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2383: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘void dtime(char*, char*)’:
+rf12ec3k.ino:2406: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2417: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘void comsetbaud(byte)’:
+rf12ec3k.ino:2430: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2439: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2446: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘void showProg()’:
+rf12ec3k.ino:2453: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘void statusreport()’:
+rf12ec3k.ino:2464: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2465: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2466: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2469: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: At global scope:
+rf12ec3k.ino:2805: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2842: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2856: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2894: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2902: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2903: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2904: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2905: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2906: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2907: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2908: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2912: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2913: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2914: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2915: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2916: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2926: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘void cmdexec(char*)’:
+rf12ec3k.ino:2996: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:2999: warning: NULL used in arithmetic
+rf12ec3k.ino:3006: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino:3025: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘void loop()’:
+rf12ec3k.ino:3049: warning: only initialized variables can be placed into program memory area
+rf12ec3k.ino: In function ‘void scanpulses(word, byte, byte, byte)’:
+rf12ec3k.ino:1405: warning: ‘lastus’ may be used uninitialized in this function
+rf12ec3k.ino: At global scope:
+rf12ec3k.ino:45: warning: ‘void exectimebeg()’ declared ‘static’ but never defined
+rf12ec3k.ino:46: warning: ‘void exectimeprt(const prog_char*)’ declared ‘static’ but never defined
+rf12ec3k.ino:51: warning: ‘uint16_t rf12_xfer(uint16_t)’ declared ‘static’ but never defined
+rf12ec3k.ino:52: warning: ‘uint32_t rf12_statfifo()’ declared ‘static’ but never defined
+rf12ec3k.ino:988: warning: ‘void reportrc(const prog_char*, byte)’ defined but not used
+rf12ec3k.ino:1242: warning: ‘void setRSSI(byte)’ defined but not used
+rf12ec3k.ino:1489: warning: ‘uint32_t mem2long(uint8_t*)’ defined but not used
+rf12ec3k.ino:163: warning: ‘void drecvpoll(byte)’ declared ‘static’ but never defined
+rf12ec3k.ino:165: warning: ‘void datarecvpoll(byte)’ declared ‘static’ but never defined
+rf12ec3k.ino:167: warning: ‘void ec3krecvpoll(uint8_t)’ declared ‘static’ but never defined
+rf12ec3k.ino:168: warning: ‘void testfifo(uint16_t, uint16_t)’ declared ‘static’ but never defined
+rf12ec3k.ino:183: warning: ‘boolean df_notfound()’ declared ‘static’ but never defined
+rf12ec3k.ino:185: warning: ‘void df_hexdump(word, word, long unsigned int)’ declared ‘static’ but never defined
+rf12ec3k.ino:187: warning: ‘void df_hexdumpol(word, byte, word)’ declared ‘static’ but never defined
+rf12ec3k.ino:189: warning: ‘void df_hexdumpbe(word, word)’ declared ‘static’ but never defined
+rf12ec3k.ino:191: warning: ‘void df_scanpages()’ declared ‘static’ but never defined
+rf12ec3k.ino:193: warning: ‘void df_scanprecs(word, word)’ declared ‘static’ but never defined
+rf12ec3k.ino:195: warning: ‘void df_upldihex(const prot*, word, word)’ declared ‘static’ but never defined
+rf12ec3k.ino:197: warning: ‘void df_upldssbe(word, word)’ declared ‘static’ but never defined
+rf12ec3k.ino:199: warning: ‘void df_upldsslog()’ declared ‘static’ but never defined
+rf12ec3k.ino:201: warning: ‘void df_upldxmbe(word, word)’ declared ‘static’ but never defined
+rf12ec3k.ino:203: warning: ‘void df_upldxmlog()’ declared ‘static’ but never defined
+rf12ec3k.ino:1862: warning: ‘void hexdump(uint8_t*, size_t)’ defined but not used
+rf12ec3k.ino:766: warning: ‘void mprintf(char*, ...)’ defined but not used
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-gcc -c -g -Os -Wall -ffunction-sections -fdata-sections -mmcu=atmega644 -DF_CPU=16000000L -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=103 -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/variants/avrnetio /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/wiring_pulse.c -o /tmp/build3008917402474327025.tmp/wiring_pulse.c.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-gcc -c -g -Os -Wall -ffunction-sections -fdata-sections -mmcu=atmega644 -DF_CPU=16000000L -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=103 -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/variants/avrnetio /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/wiring.c -o /tmp/build3008917402474327025.tmp/wiring.c.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-gcc -c -g -Os -Wall -ffunction-sections -fdata-sections -mmcu=atmega644 -DF_CPU=16000000L -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=103 -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/variants/avrnetio /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/WInterrupts.c -o /tmp/build3008917402474327025.tmp/WInterrupts.c.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-gcc -c -g -Os -Wall -ffunction-sections -fdata-sections -mmcu=atmega644 -DF_CPU=16000000L -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=103 -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/variants/avrnetio /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/wiring_analog.c -o /tmp/build3008917402474327025.tmp/wiring_analog.c.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-gcc -c -g -Os -Wall -ffunction-sections -fdata-sections -mmcu=atmega644 -DF_CPU=16000000L -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=103 -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/variants/avrnetio /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/wiring_shift.c -o /tmp/build3008917402474327025.tmp/wiring_shift.c.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-gcc -c -g -Os -Wall -ffunction-sections -fdata-sections -mmcu=atmega644 -DF_CPU=16000000L -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=103 -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/variants/avrnetio /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/wiring_digital.c -o /tmp/build3008917402474327025.tmp/wiring_digital.c.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-g++ -c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -mmcu=atmega644 -DF_CPU=16000000L -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=103 -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/variants/avrnetio /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/HardwareSerial.cpp -o /tmp/build3008917402474327025.tmp/HardwareSerial.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-g++ -c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -mmcu=atmega644 -DF_CPU=16000000L -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=103 -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/variants/avrnetio /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/new.cpp -o /tmp/build3008917402474327025.tmp/new.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-g++ -c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -mmcu=atmega644 -DF_CPU=16000000L -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=103 -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/variants/avrnetio /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/IPAddress.cpp -o /tmp/build3008917402474327025.tmp/IPAddress.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-g++ -c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -mmcu=atmega644 -DF_CPU=16000000L -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=103 -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/variants/avrnetio /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/Stream.cpp -o /tmp/build3008917402474327025.tmp/Stream.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-g++ -c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -mmcu=atmega644 -DF_CPU=16000000L -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=103 -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/variants/avrnetio /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/Tone.cpp -o /tmp/build3008917402474327025.tmp/Tone.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/Tone.cpp:133: warning: only initialized variables can be placed into program memory area
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-g++ -c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -mmcu=atmega644 -DF_CPU=16000000L -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=103 -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/variants/avrnetio /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/CDC.cpp -o /tmp/build3008917402474327025.tmp/CDC.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-g++ -c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -mmcu=atmega644 -DF_CPU=16000000L -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=103 -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/variants/avrnetio /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/WMath.cpp -o /tmp/build3008917402474327025.tmp/WMath.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-g++ -c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -mmcu=atmega644 -DF_CPU=16000000L -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=103 -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/variants/avrnetio /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/Print.cpp -o /tmp/build3008917402474327025.tmp/Print.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-g++ -c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -mmcu=atmega644 -DF_CPU=16000000L -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=103 -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/variants/avrnetio /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/main.cpp -o /tmp/build3008917402474327025.tmp/main.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-g++ -c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -mmcu=atmega644 -DF_CPU=16000000L -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=103 -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/variants/avrnetio /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/USBCore.cpp -o /tmp/build3008917402474327025.tmp/USBCore.cpp.o 
+In file included from /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/USBCore.cpp:21:
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/USBDesc.h:65:1: warning: "USB_VID" redefined
+<command-line>: warning: this is the location of the previous definition
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/USBDesc.h:66:1: warning: "USB_PID" redefined
+<command-line>: warning: this is the location of the previous definition
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-g++ -c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -mmcu=atmega644 -DF_CPU=16000000L -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=103 -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/variants/avrnetio /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/WString.cpp -o /tmp/build3008917402474327025.tmp/WString.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-g++ -c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -mmcu=atmega644 -DF_CPU=16000000L -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=103 -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio -I/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/variants/avrnetio /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/HID.cpp -o /tmp/build3008917402474327025.tmp/HID.cpp.o 
+In file included from /home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/HID.cpp:21:
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/USBDesc.h:65:1: warning: "USB_VID" redefined
+<command-line>: warning: this is the location of the previous definition
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/avrnetio/cores/avrnetio/USBDesc.h:66:1: warning: "USB_PID" redefined
+<command-line>: warning: this is the location of the previous definition
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-ar rcs /tmp/build3008917402474327025.tmp/core.a /tmp/build3008917402474327025.tmp/wiring_pulse.c.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-ar rcs /tmp/build3008917402474327025.tmp/core.a /tmp/build3008917402474327025.tmp/wiring.c.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-ar rcs /tmp/build3008917402474327025.tmp/core.a /tmp/build3008917402474327025.tmp/WInterrupts.c.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-ar rcs /tmp/build3008917402474327025.tmp/core.a /tmp/build3008917402474327025.tmp/wiring_analog.c.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-ar rcs /tmp/build3008917402474327025.tmp/core.a /tmp/build3008917402474327025.tmp/wiring_shift.c.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-ar rcs /tmp/build3008917402474327025.tmp/core.a /tmp/build3008917402474327025.tmp/wiring_digital.c.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-ar rcs /tmp/build3008917402474327025.tmp/core.a /tmp/build3008917402474327025.tmp/HardwareSerial.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-ar rcs /tmp/build3008917402474327025.tmp/core.a /tmp/build3008917402474327025.tmp/new.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-ar rcs /tmp/build3008917402474327025.tmp/core.a /tmp/build3008917402474327025.tmp/IPAddress.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-ar rcs /tmp/build3008917402474327025.tmp/core.a /tmp/build3008917402474327025.tmp/Stream.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-ar rcs /tmp/build3008917402474327025.tmp/core.a /tmp/build3008917402474327025.tmp/Tone.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-ar rcs /tmp/build3008917402474327025.tmp/core.a /tmp/build3008917402474327025.tmp/CDC.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-ar rcs /tmp/build3008917402474327025.tmp/core.a /tmp/build3008917402474327025.tmp/WMath.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-ar rcs /tmp/build3008917402474327025.tmp/core.a /tmp/build3008917402474327025.tmp/Print.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-ar rcs /tmp/build3008917402474327025.tmp/core.a /tmp/build3008917402474327025.tmp/main.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-ar rcs /tmp/build3008917402474327025.tmp/core.a /tmp/build3008917402474327025.tmp/USBCore.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-ar rcs /tmp/build3008917402474327025.tmp/core.a /tmp/build3008917402474327025.tmp/WString.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-ar rcs /tmp/build3008917402474327025.tmp/core.a /tmp/build3008917402474327025.tmp/HID.cpp.o 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-gcc -Os -Wl,--gc-sections -mmcu=atmega644 -o /tmp/build3008917402474327025.tmp/rf12ec3k.cpp.elf /tmp/build3008917402474327025.tmp/rf12ec3k.cpp.o /tmp/build3008917402474327025.tmp/core.a -L/tmp/build3008917402474327025.tmp -lm 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-objcopy -O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0 /tmp/build3008917402474327025.tmp/rf12ec3k.cpp.elf /tmp/build3008917402474327025.tmp/rf12ec3k.cpp.eep 
+/home/hgode/Documents/AVR-Net-IO/arduino-1.0.3/hardware/tools/avr/bin/avr-objcopy -O ihex -R .eeprom /tmp/build3008917402474327025.tmp/rf12ec3k.cpp.elf /tmp/build3008917402474327025.tmp/rf12ec3k.cpp.hex 
+Binary sketch size: 14,130 bytes (of a 64,512 byte maximum)
+
